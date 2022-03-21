@@ -1,7 +1,7 @@
 export default function IndexRoute() {
   return (
     <>
-      <h1>My Events</h1>
+      <h1>Home</h1>
     </>
   );
 }

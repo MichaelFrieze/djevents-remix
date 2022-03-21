@@ -17,7 +17,7 @@ export let Layout = ({ children }) => {
     <div>
       <Header />
       {routeLocation.pathname === '/' && <Showcase />}
-      <div>{children}</div>
+      <div className="container">{children}</div>
       <Footer />
     </div>
   );
