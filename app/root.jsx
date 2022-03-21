@@ -22,7 +22,9 @@ export const links = () => {
 export function meta() {
   return {
     charset: 'utf-8',
-    title: 'New Remix App',
+    title: 'DJ Events | Find the hottest parties',
+    description: 'Find the latest DJ and other musical events',
+    keywords: 'music, dj, edm, events',
     viewport: 'width=device-width,initial-scale=1',
   };
 }
@@ -35,7 +37,9 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <Outlet />
+        <Layout>
+          <Outlet />
+        </Layout>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
