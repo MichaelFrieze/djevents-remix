@@ -5,13 +5,25 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-} from "remix";
+} from 'remix';
+import { Layout } from '~/components/layout';
+
+import rootStyles from '~/styles/root.css';
+
+export const links = () => {
+  return [
+    {
+      rel: 'stylesheet',
+      href: rootStyles,
+    },
+  ];
+};
 
 export function meta() {
   return {
-    charset: "utf-8",
-    title: "New Remix App",
-    viewport: "width=device-width,initial-scale=1",
+    charset: 'utf-8',
+    title: 'New Remix App',
+    viewport: 'width=device-width,initial-scale=1',
   };
 }
 
