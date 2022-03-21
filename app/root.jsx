@@ -6,7 +6,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from 'remix';
-import { Layout } from '~/components/layout';
+import { Layout, links as layoutLinks } from '~/components/layout';
 
 import rootStyles from '~/styles/root.css';
 
@@ -16,6 +16,7 @@ export const links = () => {
       rel: 'stylesheet',
       href: rootStyles,
     },
+    ...layoutLinks(),
   ];
 };
 
