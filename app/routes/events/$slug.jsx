@@ -1,7 +1,7 @@
 import { FaPencilAlt, FaTimes } from 'react-icons/fa';
 import { Link, useLoaderData } from 'remix';
 import { API_URL } from '~/config/index';
-import eventStyles from '~/styles/routes/event.css';
+import eventStyles from '~/styles/routes/events/slug.css';
 
 export let links = () => {
   return [
@@ -15,11 +15,6 @@ export let links = () => {
 export let loader = async ({ params: { slug } }) => {
   const res = await fetch(`${API_URL}/api/events/${slug}`);
   let event = await res.json();
-
-  // this should should only one event in the terminal
-  console.log(event);
-  // console.log(events[0]) should show the same
-  // console.log(events[1]) should show undefined
 
   return event[0];
 };
