@@ -1,9 +1,15 @@
 import { useLocation } from 'remix';
-import { Header } from '~/components/header';
-import { Footer } from '~/components/footer';
-import { Showcase } from '~/components/showcase';
+import { Header, links as headerLinks } from '~/components/header';
+import { Footer, links as footerLinks } from '~/components/footer';
+import { Showcase, links as showcaseLinks } from '~/components/showcase';
+import layoutStyles from '~/styles/components/layout.css';
 
-// export let links = () => [{ rel: 'stylesheet', href: layoutStyles }];
+export let links = () => [
+  { rel: 'stylesheet', href: layoutStyles },
+  ...headerLinks(),
+  ...showcaseLinks(),
+  ...footerLinks(),
+];
 
 export let Layout = ({ children }) => {
   const routeLocation = useLocation();
@@ -11,7 +17,7 @@ export let Layout = ({ children }) => {
     <div>
       <Header />
       {routeLocation.pathname === '/' && <Showcase />}
-      <div>{children}</div>
+      <div className="container">{children}</div>
       <Footer />
     </div>
   );

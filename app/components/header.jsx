@@ -1,9 +1,17 @@
 import { NavLink } from 'remix';
+import headerStyles from '~/styles/components/header.css';
 
-export const Header = () => {
+export let links = () => [
+  {
+    rel: 'stylesheet',
+    href: headerStyles,
+  },
+];
+
+export let Header = () => {
   return (
-    <header>
-      <div>
+    <header className="header">
+      <div className="logo">
         <NavLink prefetch="intent" to="/">
           DJ Events
         </NavLink>
@@ -13,7 +21,7 @@ export const Header = () => {
         <ul>
           <li>
             <NavLink prefetch="intent" to="/events">
-              Events{' '}
+              Events
             </NavLink>
           </li>
         </ul>

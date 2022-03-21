@@ -1,3 +1,9 @@
+export let meta = () => {
+  return {
+    title: 'About DJ Events',
+  };
+};
+
 export default function AboutRoute() {
   return (
     <>

@@ -6,20 +6,21 @@ import {
   Scripts,
   ScrollRestoration,
 } from 'remix';
-import { Layout } from '~/components/layout';
+import { Layout, links as layoutLinks } from '~/components/layout';
 
 import rootStyles from '~/styles/root.css';
 
-export const links = () => {
+export let links = () => {
   return [
     {
       rel: 'stylesheet',
       href: rootStyles,
     },
+    ...layoutLinks(),
   ];
 };
 
-export function meta() {
+export let meta = () => {
   return {
     charset: 'utf-8',
     title: 'DJ Events | Find the hottest parties',
@@ -27,7 +28,7 @@ export function meta() {
     keywords: 'music, dj, edm, events',
     viewport: 'width=device-width,initial-scale=1',
   };
-}
+};
 
 export default function App() {
   return (
