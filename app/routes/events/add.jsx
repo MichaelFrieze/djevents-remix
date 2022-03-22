@@ -49,11 +49,6 @@ export default function AddEventRoute() {
       },
     };
 
-    // remove apostrophes from a string
-    let removeApostrophes = (str) => {
-      return str.replace(/'/g, '');
-    };
-
     let res = await fetch(`${strapiURL}/api/events`, {
       method: 'POST',
       headers: {
