@@ -13,7 +13,11 @@ export let EventItem = ({ evt }) => {
     <div className="event">
       <div className="img">
         <img
-          src={evt.image ? evt.image : '/images/event-default.png'}
+          src={
+            evt.attributes.image
+              ? evt.attributes.image.data.attributes.formats.thumbnail.url
+              : '/images/event-default.png'
+          }
           alt="Event"
           width={170}
           height={100}
@@ -22,13 +26,17 @@ export let EventItem = ({ evt }) => {
 
       <div className="info">
         <span>
-          {evt.date} at {evt.time}
+          {evt.attributes.date} at {evt.attributes.time}
         </span>
-        <h3>{evt.name}</h3>
+        <h3>{evt.attributes.name}</h3>
       </div>
 
       <div className="link">
-        <Link prefetch="intent" to={`/events/${evt.slug}`} className="btn">
+        <Link
+          prefetch="intent"
+          to={`/events/${evt.attributes.slug}`}
+          className="btn"
+        >
           Details
         </Link>
       </div>
