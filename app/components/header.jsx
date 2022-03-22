@@ -28,6 +28,11 @@ export let Header = () => {
               Events
             </NavLink>
           </li>
+          <li>
+            <NavLink prefetch="intent" to="/events/add">
+              Add Event
+            </NavLink>
+          </li>
         </ul>
       </nav>
     </header>

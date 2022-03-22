@@ -14,7 +14,7 @@ export let EventItem = ({ evt }) => {
       <div className="img">
         <img
           src={
-            evt.attributes.image
+            evt.attributes.image.data
               ? evt.attributes.image.data.attributes.formats.thumbnail.url
               : '/images/event-default.png'
           }

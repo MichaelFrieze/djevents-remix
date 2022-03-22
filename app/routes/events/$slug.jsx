@@ -44,7 +44,7 @@ export default function EventRoute() {
           {event.attributes.date} at {event.attributes.time}
         </span>
         <h1>{event.attributes.name}</h1>
-        {event.attributes.image && (
+        {event.attributes.image.data && (
           <div className="image">
             <img
               alt="Event"
