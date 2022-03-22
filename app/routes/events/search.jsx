@@ -1,6 +1,5 @@
 import qs from 'qs';
 import { useLoaderData, Link } from 'remix';
-import { useLocation } from 'react-router-dom';
 import { EventItem, links as eventItemLinks } from '~/components/event-item';
 import { API_URL } from '~/config/index';
 
@@ -51,7 +50,7 @@ export let loader = async ({ request }) => {
   };
 };
 
-export default function EventsIndexRoute() {
+export default function EventsSearchRoute() {
   let { events, term } = useLoaderData();
 
   return (
