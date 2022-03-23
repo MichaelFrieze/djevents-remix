@@ -1,7 +1,7 @@
 import { FaPencilAlt, FaTimes } from 'react-icons/fa';
 import { Link, useLoaderData } from 'remix';
 import { API_URL } from '~/config/index';
-import eventStyles from '~/styles/routes/events/slug.css';
+import eventStyles from '~/styles/routes/events/$slug.css';
 
 export let links = () => {
   return [
@@ -13,10 +13,12 @@ export let links = () => {
 };
 
 export let loader = async ({ params: { slug } }) => {
-  const res = await fetch(`${API_URL}/api/events/${slug}`);
+  const res = await fetch(
+    `${API_URL}/api/events?filters[slug][$eq]=${slug}&populate=image`
+  );
   let event = await res.json();
 
-  return event[0];
+  return event.data[0];
 };
 
 export default function EventRoute() {
@@ -30,7 +32,7 @@ export default function EventRoute() {
     <>
       <div className="event">
         <div className="controls">
-          <Link to={`/events/edit/${event.id}`}>
+          <Link to="/">
             <FaPencilAlt /> Edit Event
           </Link>
           <a href="#" className="delete" onClick={deleteEvent}>
@@ -39,21 +41,26 @@ export default function EventRoute() {
         </div>
 
         <span>
-          {event.date} at {event.time}
+          {event.attributes.date} at {event.attributes.time}
         </span>
-        <h1>{event.name}</h1>
-        {event.image && (
+        <h1>{event.attributes.name}</h1>
+        {event.attributes.image.data && (
           <div className="image">
-            <img alt="Event" src={event.image} width={960} height={600} />
+            <img
+              alt="Event"
+              src={event.attributes.image.data.attributes.formats.medium.url}
+              width={960}
+              height={600}
+            />
           </div>
         )}
 
         <h3>Performers:</h3>
-        <p>{event.performers}</p>
+        <p>{event.attributes.performers}</p>
         <h3>Description:</h3>
-        <p>{event.description}</p>
-        <h3>Venue: {event.venue}</h3>
-        <p>{event.address}</p>
+        <p>{event.attributes.description}</p>
+        <h3>Venue: {event.attributes.venue}</h3>
+        <p>{event.attributes.address}</p>
 
         <Link to="/events" className="back">
           {'<'} Go Back

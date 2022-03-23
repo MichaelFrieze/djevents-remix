@@ -5,10 +5,12 @@ import { API_URL } from '~/config/index';
 export let links = () => [...eventItemLinks()];
 
 export let loader = async () => {
-  let res = await fetch(`${API_URL}/api/events`);
+  let res = await fetch(
+    `${API_URL}/api/events?sort=date&pagination[limit]=3&populate=*`
+  );
   let events = await res.json();
 
-  return events.slice(0, 3);
+  return events.data;
 };
 
 export default function IndexRoute() {

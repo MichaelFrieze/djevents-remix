@@ -1,4 +1,5 @@
 import { NavLink } from 'remix';
+import { Search, links as searchLinks } from '~/components/search';
 import headerStyles from '~/styles/components/header.css';
 
 export let links = () => [
@@ -6,6 +7,7 @@ export let links = () => [
     rel: 'stylesheet',
     href: headerStyles,
   },
+  ...searchLinks(),
 ];
 
 export let Header = () => {
@@ -17,11 +19,18 @@ export let Header = () => {
         </NavLink>
       </div>
 
+      <Search />
+
       <nav>
         <ul>
           <li>
             <NavLink prefetch="intent" to="/events">
               Events
+            </NavLink>
+          </li>
+          <li>
+            <NavLink prefetch="intent" to="/events/add">
+              Add Event
             </NavLink>
           </li>
         </ul>
