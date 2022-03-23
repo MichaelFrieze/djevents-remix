@@ -1,5 +1,5 @@
 import { FaPencilAlt, FaTimes } from 'react-icons/fa';
-import { Link, useLoaderData } from 'remix';
+import { Link, useLoaderData, Form, redirect, useActionData } from 'remix';
 import { API_URL } from '~/config/index';
 import eventStyles from '~/styles/routes/events/$slug.css';
 
@@ -10,6 +10,35 @@ export let links = () => {
       href: eventStyles,
     },
   ];
+};
+
+export let action = async ({ request }) => {
+  let formData = await request.formData();
+  let { _action, eventID } = Object.fromEntries(formData);
+
+  if (_action === 'delete') {
+    const res = await fetch(`${API_URL}/api/events/${eventID}`, {
+      method: 'DELETE',
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message);
+    } else {
+      // to slow down the redirect
+      await new Promise((res) => {
+        setTimeout(res, 1000);
+      });
+      return redirect('/events');
+    }
+  }
+
+  if (_action === 'edit') {
+    // return redirect('/events');
+    console.log('action: ', _action);
+  }
+  return formData;
 };
 
 export let loader = async ({ params: { slug } }) => {
@@ -23,21 +52,34 @@ export let loader = async ({ params: { slug } }) => {
 
 export default function EventRoute() {
   let event = useLoaderData();
-
-  const deleteEvent = (e) => {
-    console.log('delete');
-  };
+  let actionData = useActionData();
 
   return (
     <>
       <div className="event">
         <div className="controls">
-          <Link to="/">
-            <FaPencilAlt /> Edit Event
-          </Link>
-          <a href="#" className="delete" onClick={deleteEvent}>
-            <FaTimes /> Delete Event
-          </a>
+          {/* <Form method="post">
+            <input type="hidden" name="hiddenValue" value={event} />
+            <button
+              type="submit"
+              className="btn-secondary"
+              name="_action"
+              value="edit"
+            >
+              <FaPencilAlt /> Edit Event
+            </button>
+          </Form> */}
+          <Form method="post">
+            <input type="hidden" name="eventID" value={event.id} />
+            <button
+              type="submit"
+              className="btn-secondary"
+              name="_action"
+              value="delete"
+            >
+              <FaTimes /> Delete Event
+            </button>
+          </Form>
         </div>
 
         <span>

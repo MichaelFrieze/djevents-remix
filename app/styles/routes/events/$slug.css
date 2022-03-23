@@ -19,6 +19,9 @@
   position: absolute;
   right: 30px;
   top: 0;
+  display: flex;
+  /* justify-content: stretch; */
+  /* align-items: center; */
 }
 
 .delete {
