@@ -11,46 +11,6 @@ export let links = () => {
   ];
 };
 
-function validateForm(field, value) {
-  switch (field) {
-    case 'name': {
-      if (typeof value !== 'string' || value.length < 1) {
-        return `Event name must be at least 1 character long`;
-      }
-    }
-    case 'performers': {
-      if (typeof value !== 'string' || value.length < 1) {
-        return `Performers must be at least 1 character long`;
-      }
-    }
-    case 'venue': {
-      if (typeof value !== 'string' || value.length < 1) {
-        return `Venue must be at least 1 character long`;
-      }
-    }
-    case 'address': {
-      if (typeof value !== 'string' || value.length < 1) {
-        return `Address must be at least 1 character long`;
-      }
-    }
-    case 'date': {
-      if (typeof value !== 'string' || value.length < 1) {
-        return `Please enter a date`;
-      }
-    }
-    case 'time': {
-      if (typeof value !== 'string' || value.length < 1) {
-        return `Please enter a time`;
-      }
-    }
-    case 'description': {
-      if (typeof value !== 'string' || value.length < 1) {
-        return `Please enter a description`;
-      }
-    }
-  }
-}
-
 export let action = async ({ request }) => {
   let formData = await request.formData();
   let fields = Object.fromEntries(formData);
@@ -67,19 +27,16 @@ export let action = async ({ request }) => {
   };
   if (Object.values(fieldErrors).some(Boolean)) return { fieldErrors, fields };
 
-  let strapiAddEventData = {
-    data: {
-      ...fields,
-      slug: fields.name.toLowerCase().replace(/'/g, '').replace(/\s/g, '-'),
-    },
-  };
-
   let res = await fetch(`${API_URL}/api/events`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(strapiAddEventData),
+    body: JSON.stringify({
+      data: {
+        ...fields,
+      },
+    }),
   });
 
   if (!res.ok) {
@@ -89,7 +46,6 @@ export let action = async ({ request }) => {
   let evt = await res.json();
 
   return redirect(`/events/${evt.data.attributes.slug}`);
-  // return fields;
 };
 
 export default function AddEventRoute() {
@@ -255,4 +211,44 @@ export default function AddEventRoute() {
       </Form>
     </>
   );
+}
+
+function validateForm(field, value) {
+  switch (field) {
+    case 'name': {
+      if (typeof value !== 'string' || value.length < 1) {
+        return `Event name must be at least 1 character long`;
+      }
+    }
+    case 'performers': {
+      if (typeof value !== 'string' || value.length < 1) {
+        return `Performers must be at least 1 character long`;
+      }
+    }
+    case 'venue': {
+      if (typeof value !== 'string' || value.length < 1) {
+        return `Venue must be at least 1 character long`;
+      }
+    }
+    case 'address': {
+      if (typeof value !== 'string' || value.length < 1) {
+        return `Address must be at least 1 character long`;
+      }
+    }
+    case 'date': {
+      if (typeof value !== 'string' || value.length < 1) {
+        return `Please enter a date`;
+      }
+    }
+    case 'time': {
+      if (typeof value !== 'string' || value.length < 1) {
+        return `Please enter a time`;
+      }
+    }
+    case 'description': {
+      if (typeof value !== 'string' || value.length < 1) {
+        return `Please enter a description`;
+      }
+    }
+  }
 }
