@@ -26,18 +26,14 @@ export let action = async ({ request }) => {
     if (!res.ok) {
       throw new Error(data.message);
     } else {
-      // to slow down the redirect
-      await new Promise((res) => {
-        setTimeout(res, 1000);
-      });
       return redirect('/events');
     }
   }
 
   if (_action === 'edit') {
-    // return redirect('/events');
-    console.log('action: ', _action);
+    return redirect(`/events/edit/${eventID}`);
   }
+
   return formData;
 };
 
@@ -52,14 +48,13 @@ export let loader = async ({ params: { slug } }) => {
 
 export default function EventRoute() {
   let event = useLoaderData();
-  let actionData = useActionData();
 
   return (
     <>
       <div className="event">
         <div className="controls">
-          {/* <Form method="post">
-            <input type="hidden" name="hiddenValue" value={event} />
+          <Form method="post">
+            <input type="hidden" name="eventID" value={event.id} />
             <button
               type="submit"
               className="btn-secondary"
@@ -68,7 +63,7 @@ export default function EventRoute() {
             >
               <FaPencilAlt /> Edit Event
             </button>
-          </Form> */}
+          </Form>
           <Form method="post">
             <input type="hidden" name="eventID" value={event.id} />
             <button

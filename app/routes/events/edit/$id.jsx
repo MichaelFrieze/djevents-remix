@@ -1,19 +1,22 @@
-import { Link, Form, redirect, useActionData } from 'remix';
+import moment from 'moment';
+import { FaImage } from 'react-icons/fa';
+import { useState } from 'react';
+import { Link, useLoaderData, Form, redirect, useActionData } from 'remix';
 import { API_URL } from '~/config/index';
-import addEventStyles from '~/styles/routes/events/add.css';
+import eventIDStyles from '~/styles/routes/events/edit/$id.css';
 
 export let links = () => {
   return [
     {
       rel: 'stylesheet',
-      href: addEventStyles,
+      href: eventIDStyles,
     },
   ];
 };
 
 export let action = async ({ request }) => {
   let formData = await request.formData();
-  let fields = Object.fromEntries(formData);
+  let { eventID, ...fields } = Object.fromEntries(formData);
 
   let fieldErrors = {
     name: validateForm('name', fields.name),
@@ -26,8 +29,8 @@ export let action = async ({ request }) => {
   };
   if (Object.values(fieldErrors).some(Boolean)) return { fieldErrors, fields };
 
-  let res = await fetch(`${API_URL}/api/events`, {
-    method: 'POST',
+  let res = await fetch(`${API_URL}/api/events/${eventID}`, {
+    method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -47,13 +50,21 @@ export let action = async ({ request }) => {
   return redirect(`/events/${evt.data.attributes.slug}`);
 };
 
-export default function AddEventRoute() {
+export let loader = async ({ params: { id } }) => {
+  let res = await fetch(`${API_URL}/api/events/${id}?populate=*`);
+  let event = await res.json();
+
+  return event.data;
+};
+
+export default function EditEventRoute() {
+  let loaderData = useLoaderData();
   let actionData = useActionData();
 
   return (
     <>
       <Link to="/events">Go Back</Link>
-      <h1>Add Event</h1>
+      <h1>Edit Event</h1>
       <Form method="post" className="form">
         <div className="grid">
           <div>
@@ -62,7 +73,7 @@ export default function AddEventRoute() {
               type="text"
               id="name"
               name="name"
-              defaultValue={actionData?.fields?.name}
+              defaultValue={loaderData.attributes.name}
               aria-invalid={Boolean(actionData?.fieldErrors?.name)}
               aria-describedby={
                 actionData?.fieldErrors?.name ? 'name-error' : undefined
@@ -80,7 +91,7 @@ export default function AddEventRoute() {
               type="text"
               name="performers"
               id="performers"
-              defaultValue={actionData?.fields?.performers}
+              defaultValue={loaderData.attributes.performers}
               aria-invalid={Boolean(actionData?.fieldErrors?.performers)}
               aria-describedby={
                 actionData?.fieldErrors?.performers
@@ -104,7 +115,7 @@ export default function AddEventRoute() {
               type="text"
               name="venue"
               id="venue"
-              defaultValue={actionData?.fields?.venue}
+              defaultValue={loaderData.attributes.venue}
               aria-invalid={Boolean(actionData?.fieldErrors?.venue)}
               aria-describedby={
                 actionData?.fieldErrors?.venue ? 'venue-error' : undefined
@@ -126,7 +137,7 @@ export default function AddEventRoute() {
               type="text"
               name="address"
               id="address"
-              defaultValue={actionData?.fields?.address}
+              defaultValue={loaderData.attributes.address}
               aria-invalid={Boolean(actionData?.fieldErrors?.address)}
               aria-describedby={
                 actionData?.fieldErrors?.address ? 'address-error' : undefined
@@ -148,6 +159,7 @@ export default function AddEventRoute() {
               type="date"
               name="date"
               id="date"
+              defaultValue={loaderData.attributes.date}
               aria-invalid={Boolean(actionData?.fieldErrors?.date)}
               aria-describedby={
                 actionData?.fieldErrors?.date ? 'date-error' : undefined
@@ -165,7 +177,7 @@ export default function AddEventRoute() {
               type="text"
               name="time"
               id="time"
-              defaultValue={actionData?.fields?.time}
+              defaultValue={loaderData.attributes.time}
               aria-invalid={Boolean(actionData?.fieldErrors?.time)}
               aria-describedby={
                 actionData?.fieldErrors?.time ? 'time-error' : undefined
@@ -178,14 +190,13 @@ export default function AddEventRoute() {
             ) : null}
           </div>
         </div>
-
         <div>
           <label htmlFor="description">Event Description</label>
           <textarea
             type="text"
             name="description"
             id="description"
-            defaultValue={actionData?.fields?.description}
+            defaultValue={loaderData.attributes.description}
             aria-invalid={Boolean(actionData?.fieldErrors?.description)}
             aria-describedby={
               actionData?.fieldErrors?.description
@@ -204,8 +215,10 @@ export default function AddEventRoute() {
           ) : null}
         </div>
 
+        <input type="hidden" name="eventID" value={loaderData.id} />
+
         <button className="btn" type="submit">
-          Add Event
+          Edit Event
         </button>
       </Form>
     </>
