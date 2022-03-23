@@ -64,3 +64,10 @@ h1 {
 .btn-icon svg {
   margin-right: 5px;
 }
+
+.form-validation-error {
+  margin: 0;
+  margin-top: 0.25em;
+  color: hsl(356, 100%, 71%);
+  font-size: 0.8rem;
+}
