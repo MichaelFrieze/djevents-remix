@@ -65,6 +65,10 @@ h1 {
   margin-right: 5px;
 }
 
+.btn-modal {
+  margin-top: 10px;
+}
+
 .form-validation-error {
   margin: 0;
   margin-top: 0.25em;

@@ -7,6 +7,8 @@ import {
   redirect,
   useActionData,
   useNavigate,
+  unstable_parseMultipartFormData,
+  unstable_createMemoryUploadHandler,
 } from 'remix';
 import { FaTimes } from 'react-icons/fa';
 import modalStyles from '~/styles/modal.css';
@@ -25,20 +27,26 @@ export let links = () => {
   ];
 };
 
-// export let action = async () => {};
+export let action = async ({ request }) => {
+  const uploadHandler = unstable_createMemoryUploadHandler({
+    maxFileSize: 500_000,
+  });
 
-export let loader = async ({ params }) => {
+  let formData = await unstable_parseMultipartFormData(request, uploadHandler);
+
+  let image = formData.get('image');
+
+  return image;
+};
+
+export let loader = async ({ params, request }) => {
   return params;
 };
 
 export default function EditEventModalRoute() {
   let loaderData = useLoaderData();
-  let navigate = useNavigate();
+  let actionData = useActionData();
 
-  let handleClose = () => {
-    console.log('close modal');
-    navigate(`/events/edit/${loaderData.id}`);
-  };
   return (
     <>
       <div className="overlay">
@@ -52,11 +60,13 @@ export default function EditEventModalRoute() {
           <div className="body">
             <div className="form">
               <h1>Upload Event Image</h1>
-              <Form method="post">
+              <Form method="post" encType="multipart/form-data">
                 <div className="file">
-                  <input type="file" />
+                  <input type="file" id="image" name="image" />
                 </div>
-                <input type="submit" value="Upload" className="btn" />
+                <button className="btn btn-modal" type="submit">
+                  Upload
+                </button>
               </Form>
             </div>
           </div>
