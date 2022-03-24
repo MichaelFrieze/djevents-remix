@@ -1,7 +1,14 @@
 import moment from 'moment';
 import { FaImage } from 'react-icons/fa';
 import { useState } from 'react';
-import { Link, useLoaderData, Form, redirect, useActionData } from 'remix';
+import {
+  Link,
+  useLoaderData,
+  Form,
+  redirect,
+  useActionData,
+  useNavigate,
+} from 'remix';
 import { API_URL } from '~/config/index';
 import eventIDStyles from '~/styles/routes/events/edit/$id.css';
 
@@ -60,6 +67,11 @@ export let loader = async ({ params: { id } }) => {
 export default function EditEventRoute() {
   let loaderData = useLoaderData();
   let actionData = useActionData();
+  let navigate = useNavigate();
+
+  let handleButtonClick = async () => {
+    navigate('/events');
+  };
 
   return (
     <>
@@ -218,9 +230,34 @@ export default function EditEventRoute() {
         <input type="hidden" name="eventID" value={loaderData.id} />
 
         <button className="btn" type="submit">
-          Edit Event
+          Update Event
         </button>
       </Form>
+
+      <h2>Event Image</h2>
+      {loaderData.attributes.image.data ? (
+        <img
+          src={
+            loaderData.attributes.image.data.attributes.formats.thumbnail.url
+          }
+          alt="Event"
+          height={100}
+          width={170}
+        />
+      ) : (
+        <div>
+          <p>No image uploaded</p>
+        </div>
+      )}
+      <div>
+        <button
+          type="button"
+          className="btn-secondary btn-icon"
+          onClick={handleButtonClick}
+        >
+          <FaImage /> Set Image
+        </button>
+      </div>
     </>
   );
 }
