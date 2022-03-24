@@ -8,6 +8,7 @@ import {
   redirect,
   useActionData,
   useNavigate,
+  Outlet,
 } from 'remix';
 import { API_URL } from '~/config/index';
 import eventIDStyles from '~/styles/routes/events/edit/$id.css';
@@ -68,9 +69,10 @@ export default function EditEventRoute() {
   let loaderData = useLoaderData();
   let actionData = useActionData();
   let navigate = useNavigate();
+  let eventID = loaderData.id;
 
   let handleButtonClick = async () => {
-    navigate('/events');
+    navigate(`/events/edit/${eventID}/modal`);
   };
 
   return (
@@ -234,6 +236,7 @@ export default function EditEventRoute() {
         </button>
       </Form>
 
+      <Outlet />
       <h2>Event Image</h2>
       {loaderData.attributes.image.data ? (
         <img
