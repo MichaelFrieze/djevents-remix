@@ -49,6 +49,14 @@ export let loader = async ({ params: { slug } }) => {
 export default function EventRoute() {
   let event = useLoaderData();
 
+  let isMedImg = false;
+
+  if (event.attributes.image.data) {
+    if (event.attributes.image.data.attributes.formats.medium) {
+      isMedImg = true;
+    }
+  }
+
   return (
     <>
       <div className="event">
@@ -81,7 +89,7 @@ export default function EventRoute() {
           {event.attributes.date} at {event.attributes.time}
         </span>
         <h1>{event.attributes.name}</h1>
-        {event.attributes.image.data && (
+        {isMedImg && (
           <div className="image">
             <img
               alt="Event"

@@ -43,30 +43,19 @@ export let action = async ({ request }) => {
   uploadData.append('refId', eventID);
   uploadData.append('field', 'image');
 
-  // let res = await fetch(`${API_URL}/api/events/${eventID}?populate=image`, {
-  //   method: 'PUT',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  //   body: JSON.stringify({
-  //     data: {
-  //       ...fields,
-  //     },
-  //   }),
-  // });
-
-  let res = await fetch(`${API_URL}/api/upload`, {
+  let uploadResponse = await fetch(`${API_URL}/api/upload`, {
     method: 'POST',
     body: uploadData,
   });
 
-  return {
-    formData,
-    eventID,
-    formImage,
-    uploadData,
-    res,
-  };
+  if (!uploadResponse.ok) {
+    throw new Error('Something Went Wrong');
+  }
+
+  let eventResponse = await fetch(`${API_URL}/api/events/${eventID}`);
+  let event = await eventResponse.json();
+
+  return redirect(`/events/${event.data.attributes.slug}`);
 };
 
 export let loader = async ({ params, request }) => {
@@ -75,14 +64,6 @@ export let loader = async ({ params, request }) => {
 
 export default function EditEventModalRoute() {
   let loaderData = useLoaderData();
-  // let { formData, eventID, formImage, uploadData, res } = useActionData();
-  // console.log('Form Data: ', formData);
-  // console.log('Event ID: ', eventID);
-  // console.log('form Image: ', formImage);
-  // console.log('Upload Data: ', uploadData);
-  // console.log('Res: ', res);
-  let actionData = useActionData();
-  console.log(actionData);
 
   return (
     <>
@@ -93,7 +74,6 @@ export default function EditEventModalRoute() {
               <FaTimes />
             </Link>
           </div>
-          {/* {title && <div>{title}</div>} */}
           <div className="body">
             <div className="form">
               <h1>Upload Event Image</h1>
