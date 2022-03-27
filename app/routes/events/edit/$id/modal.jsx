@@ -75,7 +75,6 @@ export let loader = async ({ params, request }) => {
 
 export default function EditEventModalRoute() {
   let loaderData = useLoaderData();
-  let navigate = useNavigate();
 
   let fileValidation = () => {
     let fi = document.getElementById('image');
