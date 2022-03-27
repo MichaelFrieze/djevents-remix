@@ -127,6 +127,13 @@ export default function EditEventModalRoute() {
           <div className="body">
             <div className="form">
               <h1>Upload Event Image</h1>
+              <p>
+                <small>
+                  Image type: <em>jpeg, jpg, png, webp</em>
+                  <br />
+                  Max size: <em>10mb</em>
+                </small>
+              </p>
               <Form method="post" encType="multipart/form-data">
                 <div className="file">
                   <input
