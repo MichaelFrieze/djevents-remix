@@ -7,10 +7,23 @@
   z-index: 100;
 }
 
-.header {
+.modal-header {
   display: flex;
   justify-content: flex-end;
   font-size: 25px;
+  align-items: center;
+  height: 60px;
+  padding: 0 30px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header a {
+  color: #333;
+  margin-right: 20px;
+}
+
+.modal-header a:hover {
+  color: #000;
 }
 
 .body {
@@ -31,4 +44,13 @@ body {
   justify-content: center;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.7);
+}
+
+.btn-modal {
+  margin-top: 10px;
+}
+
+.btn-modal:disabled {
+  background-color: rgba(0, 0, 0, 0.3);
+  cursor: not-allowed;
 }

@@ -5,8 +5,8 @@ import {
   redirect,
   unstable_parseMultipartFormData,
   unstable_createMemoryUploadHandler,
-  useNavigate,
 } from 'remix';
+import { useState } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import { API_URL } from '~/config/index';
 import modalStyles from '~/styles/modal.css';
@@ -32,7 +32,7 @@ export let action = async ({ request }) => {
 
   let formData = await unstable_parseMultipartFormData(request, uploadHandler);
   let { eventID } = Object.fromEntries(formData);
-  let formImage = formData.get('image');
+  let formImage = formData.get('image-input');
 
   let uploadData = new FormData();
   uploadData.append('files', formImage);
@@ -75,22 +75,27 @@ export let loader = async ({ params, request }) => {
 
 export default function EditEventModalRoute() {
   let loaderData = useLoaderData();
+  let [uploadBtnDisabled, setUploadBtnDisabled] = useState(() => true);
 
   let fileValidation = () => {
-    let fi = document.getElementById('image');
+    let fi = document.getElementById('image-input');
 
     // File size validation
     if (fi.files.length > 0) {
+      setUploadBtnDisabled(false);
       for (let i = 0; i <= fi.files.length - 1; i++) {
         let fsize = fi.files.item(i).size;
         let file = Math.round(fsize / 1024);
         // The size of the file.
         if (file >= 10096) {
-          alert('File too Big! Please upload an image file less than 10mb');
+          setUploadBtnDisabled(true);
+          alert('File too Big! Please upload an image file less than 10mb.');
           fi.value = '';
           return;
         }
       }
+    } else {
+      setUploadBtnDisabled(true);
     }
 
     // You can also display filesize with this line:
@@ -100,9 +105,12 @@ export default function EditEventModalRoute() {
     let filePath = fi.value;
     let allowedExtensions = /(\.jpg|\.jpeg|\.png|\.webp)$/i;
     if (!allowedExtensions.exec(filePath)) {
+      setUploadBtnDisabled(true);
       alert('Wrong file type! Image must be jpeg, jpg, png, or webp.');
       fi.value = '';
       return;
+    } else {
+      setUploadBtnDisabled(false);
     }
   };
 
@@ -110,7 +118,7 @@ export default function EditEventModalRoute() {
     <>
       <div className="overlay">
         <div className="modal">
-          <div className="header">
+          <div className="modal-header">
             <Link to={`/events/edit/${loaderData.id}`}>
               <FaTimes />
             </Link>
@@ -129,14 +137,20 @@ export default function EditEventModalRoute() {
                 <div className="file">
                   <input
                     type="file"
-                    id="image"
-                    name="image"
+                    id="image-input"
+                    name="image-input"
                     onChange={fileValidation}
                   />
                 </div>
                 <input type="hidden" name="eventID" value={loaderData.id} />
-                <button className="btn btn-modal" type="submit">
-                  Upload
+                <button
+                  className="btn btn-modal"
+                  type="submit"
+                  disabled={uploadBtnDisabled}
+                >
+                  {uploadBtnDisabled
+                    ? 'Please choose an image file...'
+                    : 'Upload'}
                 </button>
               </Form>
             </div>
