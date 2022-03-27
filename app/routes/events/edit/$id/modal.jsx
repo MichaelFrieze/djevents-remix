@@ -109,10 +109,6 @@ export default function EditEventModalRoute() {
 
   return (
     <>
-      <div
-        className="click-outside-link"
-        onClick={() => navigate(`/events/edit/${loaderData.id}`)}
-      />
       <div className="overlay">
         <div className="modal">
           <div className="header">
