@@ -1,14 +1,11 @@
-// import { useState, useEffect } from 'react';
-// import ReactDOM from 'react-dom';
 import {
   Link,
   useLoaderData,
   Form,
   redirect,
-  useActionData,
-  useNavigate,
   unstable_parseMultipartFormData,
   unstable_createMemoryUploadHandler,
+  useNavigate,
 } from 'remix';
 import { FaTimes } from 'react-icons/fa';
 import { API_URL } from '~/config/index';
@@ -30,7 +27,7 @@ export let links = () => {
 
 export let action = async ({ request }) => {
   const uploadHandler = unstable_createMemoryUploadHandler({
-    maxFileSize: 5_000_000,
+    maxFileSize: 50_000_000,
   });
 
   let formData = await unstable_parseMultipartFormData(request, uploadHandler);
@@ -78,9 +75,14 @@ export let loader = async ({ params, request }) => {
 
 export default function EditEventModalRoute() {
   let loaderData = useLoaderData();
+  let navigate = useNavigate();
 
   return (
     <>
+      <div
+        className="click-outside-link"
+        onClick={() => navigate(`/events/edit/${loaderData.id}`)}
+      />
       <div className="overlay">
         <div className="modal">
           <div className="header">
