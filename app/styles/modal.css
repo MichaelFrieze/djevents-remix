@@ -17,6 +17,10 @@
   padding-top: 10px;
 }
 
+body {
+  overflow: hidden;
+}
+
 .overlay {
   position: fixed;
   top: 0;
