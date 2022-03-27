@@ -87,9 +87,7 @@ export default function EditEventModalRoute() {
         let file = Math.round(fsize / 1024);
         // The size of the file.
         if (file >= 10096) {
-          alert(
-            'File too Big! Please upload an image file (.jpeg/.jpg/.png/.webp) with a size less than 10mb'
-          );
+          alert('File too Big! Please upload an image file less than 10mb');
           fi.value = '';
           return;
         }
@@ -103,9 +101,7 @@ export default function EditEventModalRoute() {
     let filePath = fi.value;
     let allowedExtensions = /(\.jpg|\.jpeg|\.png|\.webp)$/i;
     if (!allowedExtensions.exec(filePath)) {
-      alert(
-        'Wrong file type! Please upload an image file (.jpeg/.jpg/.png/.webp) with a size less than 10mb'
-      );
+      alert('Wrong file type! Image must be jpeg, jpg, png, or webp.');
       fi.value = '';
       return;
     }
