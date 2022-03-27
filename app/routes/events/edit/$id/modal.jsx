@@ -26,8 +26,8 @@ export let links = () => {
 };
 
 export let action = async ({ request }) => {
-  const uploadHandler = unstable_createMemoryUploadHandler({
-    maxFileSize: 50_000_000,
+  let uploadHandler = unstable_createMemoryUploadHandler({
+    maxFileSize: 20_000_000,
   });
 
   let formData = await unstable_parseMultipartFormData(request, uploadHandler);
@@ -77,6 +77,40 @@ export default function EditEventModalRoute() {
   let loaderData = useLoaderData();
   let navigate = useNavigate();
 
+  let fileValidation = () => {
+    let fi = document.getElementById('image');
+
+    // File size validation
+    if (fi.files.length > 0) {
+      for (let i = 0; i <= fi.files.length - 1; i++) {
+        let fsize = fi.files.item(i).size;
+        let file = Math.round(fsize / 1024);
+        // The size of the file.
+        if (file >= 10096) {
+          alert(
+            'File too Big! Please upload an image file (.jpeg/.jpg/.png/.webp) with a size less than 10mb'
+          );
+          fi.value = '';
+          return;
+        }
+      }
+    }
+
+    // You can also display filesize with this line:
+    // document.getElementById('size').innerHTML = '<b>' + file + '</b> KB';
+
+    // File type validation
+    let filePath = fi.value;
+    let allowedExtensions = /(\.jpg|\.jpeg|\.png|\.webp)$/i;
+    if (!allowedExtensions.exec(filePath)) {
+      alert(
+        'Wrong file type! Please upload an image file (.jpeg/.jpg/.png/.webp) with a size less than 10mb'
+      );
+      fi.value = '';
+      return;
+    }
+  };
+
   return (
     <>
       <div
@@ -95,7 +129,12 @@ export default function EditEventModalRoute() {
               <h1>Upload Event Image</h1>
               <Form method="post" encType="multipart/form-data">
                 <div className="file">
-                  <input type="file" id="image" name="image" />
+                  <input
+                    type="file"
+                    id="image"
+                    name="image"
+                    onChange={fileValidation}
+                  />
                 </div>
                 <input type="hidden" name="eventID" value={loaderData.id} />
                 <button className="btn btn-modal" type="submit">
