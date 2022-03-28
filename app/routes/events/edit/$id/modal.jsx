@@ -5,6 +5,7 @@ import {
   redirect,
   unstable_parseMultipartFormData,
   unstable_createMemoryUploadHandler,
+  useTransition,
 } from 'remix';
 import { useState } from 'react';
 import { FaTimes } from 'react-icons/fa';
@@ -75,7 +76,17 @@ export let loader = async ({ params, request }) => {
 
 export default function EditEventModalRoute() {
   let loaderData = useLoaderData();
+  let transition = useTransition();
+
   let [uploadBtnDisabled, setUploadBtnDisabled] = useState(() => true);
+
+  let isUploadingImage = transition.state === 'submitting';
+
+  if (isUploadingImage) {
+    if (!uploadBtnDisabled) {
+      setUploadBtnDisabled(true);
+    }
+  }
 
   let fileValidation = () => {
     let fi = document.getElementById('image-input');
@@ -149,7 +160,9 @@ export default function EditEventModalRoute() {
                   disabled={uploadBtnDisabled}
                 >
                   {uploadBtnDisabled
-                    ? 'Please choose an image file...'
+                    ? isUploadingImage
+                      ? 'Uploading...'
+                      : 'Please choose an image file...'
                     : 'Upload'}
                 </button>
               </Form>

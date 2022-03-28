@@ -1,6 +1,4 @@
-import moment from 'moment';
 import { FaImage } from 'react-icons/fa';
-import { useState } from 'react';
 import {
   Link,
   useLoaderData,
