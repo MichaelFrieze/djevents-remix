@@ -9,13 +9,13 @@ import {
   Outlet,
 } from 'remix';
 import { API_URL } from '~/config/index';
-import eventIDStyles from '~/styles/routes/events/edit/$id.css';
+import formStyles from '~/styles/form.css';
 
 export let links = () => {
   return [
     {
       rel: 'stylesheet',
-      href: eventIDStyles,
+      href: formStyles,
     },
   ];
 };

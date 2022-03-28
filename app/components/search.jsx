@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import searchStyles from '~/styles/components/search.css';
+import searchStyles from '~/styles/search.css';
 
 export let links = () => [
   {

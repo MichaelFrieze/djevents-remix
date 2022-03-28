@@ -8,13 +8,13 @@ import {
 } from 'remix';
 import { Layout, links as layoutLinks } from '~/components/layout';
 
-import rootStyles from '~/styles/root.css';
+import globalStyles from '~/styles/global.css';
 
 export let links = () => {
   return [
     {
       rel: 'stylesheet',
-      href: rootStyles,
+      href: globalStyles,
     },
     ...layoutLinks(),
   ];

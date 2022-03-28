@@ -2,7 +2,7 @@ import { useLocation } from 'remix';
 import { Header, links as headerLinks } from '~/components/header';
 import { Footer, links as footerLinks } from '~/components/footer';
 import { Showcase, links as showcaseLinks } from '~/components/showcase';
-import layoutStyles from '~/styles/components/layout.css';
+import layoutStyles from '~/styles/layout.css';
 
 export let links = () => [
   { rel: 'stylesheet', href: layoutStyles },

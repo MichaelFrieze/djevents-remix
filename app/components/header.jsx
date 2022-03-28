@@ -1,6 +1,6 @@
 import { NavLink } from 'remix';
 import { Search, links as searchLinks } from '~/components/search';
-import headerStyles from '~/styles/components/header.css';
+import headerStyles from '~/styles/header.css';
 
 export let links = () => [
   {

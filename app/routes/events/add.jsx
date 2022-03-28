@@ -1,6 +1,6 @@
 import { Link, Form, redirect, useActionData } from 'remix';
 import { API_URL } from '~/config/index';
-import addEventStyles from '~/styles/routes/events/add.css';
+import addEventStyles from '~/styles/add.css';
 
 export let links = () => {
   return [

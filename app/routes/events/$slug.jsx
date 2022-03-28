@@ -1,7 +1,7 @@
 import { FaPencilAlt, FaTimes } from 'react-icons/fa';
 import { Link, useLoaderData, Form, redirect, useActionData } from 'remix';
 import { API_URL } from '~/config/index';
-import eventStyles from '~/styles/routes/events/$slug.css';
+import eventStyles from '~/styles/event.css';
 
 export let links = () => {
   return [

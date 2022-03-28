@@ -1,5 +1,5 @@
 import { Link } from 'remix';
-import footerStyles from '~/styles/components/footer.css';
+import footerStyles from '~/styles/footer.css';
 
 export let links = () => [
   {
