@@ -237,17 +237,15 @@ export default function EditEventRoute() {
       <Outlet />
       <h2>Event Image</h2>
       {loaderData.attributes.image.data ? (
-        <Link to={`/events/edit/${eventID}/modal`}>
-          <img
-            src={
-              loaderData.attributes.image.data.attributes.formats.thumbnail.url
-            }
-            alt="Event"
-            height={100}
-            width={170}
-            // onClick={handleButtonClick}
-          />
-        </Link>
+        <img
+          src={
+            loaderData.attributes.image.data.attributes.formats.thumbnail.url
+          }
+          alt="Event"
+          height={100}
+          width={170}
+          // onClick={handleButtonClick}
+        />
       ) : (
         <div>
           <p>No image uploaded</p>
