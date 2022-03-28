@@ -17,11 +17,11 @@ export let action = async ({ request }) => {
   let { _action, eventID } = Object.fromEntries(formData);
 
   if (_action === 'delete') {
-    const res = await fetch(`${API_URL}/api/events/${eventID}`, {
+    let res = await fetch(`${API_URL}/api/events/${eventID}`, {
       method: 'DELETE',
     });
 
-    const data = await res.json();
+    let data = await res.json();
 
     if (!res.ok) {
       throw new Error(data.message);
@@ -38,7 +38,7 @@ export let action = async ({ request }) => {
 };
 
 export let loader = async ({ params: { slug } }) => {
-  const res = await fetch(
+  let res = await fetch(
     `${API_URL}/api/events?filters[slug][$eq]=${slug}&populate=image`
   );
   let event = await res.json();

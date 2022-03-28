@@ -9,7 +9,7 @@ export let loader = async ({ request }) => {
   let url = new URL(request.url);
   let term = url.searchParams.get('term');
 
-  const query = qs.stringify(
+  let query = qs.stringify(
     {
       filters: {
         $or: [

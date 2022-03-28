@@ -12,7 +12,7 @@ export let links = () => [
 ];
 
 export let Layout = ({ children }) => {
-  const routeLocation = useLocation();
+  let routeLocation = useLocation();
   return (
     <div>
       <Header />
