@@ -4,7 +4,7 @@ import authStyles from '~/styles/auth-form.css';
 
 export let links = () => [{ rel: 'stylesheet', href: authStyles }];
 
-export default function LoginRoute() {
+export default function RegisterRoute() {
   return (
     <>
       <div className="auth">
