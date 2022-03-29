@@ -1,5 +1,4 @@
 import { Link } from 'remix';
-import { PER_PAGE } from '~/config/index';
 
 export const Pagination = ({ page, pageCount }) => {
   return (
