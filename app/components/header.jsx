@@ -1,3 +1,4 @@
+import { FaSignInAlt, FaSignOutAlt } from 'react-icons/fa';
 import { NavLink } from 'remix';
 import { Search, links as searchLinks } from '~/components/search';
 import headerStyles from '~/styles/header.css';
@@ -31,6 +32,15 @@ export let Header = () => {
           <li>
             <NavLink prefetch="intent" to="/events/add">
               Add Event
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              prefetch="intent"
+              to="/account/login"
+              className="btn-secondary btn-icon"
+            >
+              <FaSignInAlt /> Login
             </NavLink>
           </li>
         </ul>
