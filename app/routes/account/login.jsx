@@ -1,10 +1,43 @@
 import { FaUser } from 'react-icons/fa';
-import { Link, Form } from 'remix';
+import { Link, Form, json, useActionData } from 'remix';
+import { login } from '~/utils/session.server';
 import authStyles from '~/styles/auth-form.css';
 
 export let links = () => [{ rel: 'stylesheet', href: authStyles }];
 
+let badRequest = (data) => json(data, { status: 400 });
+
+export let action = async ({ request }) => {
+  let form = await request.formData();
+  let email = form.get('email');
+  let password = form.get('password');
+
+  if (typeof email !== 'string' || typeof password !== 'string') {
+    return badRequest({
+      formError: `Form not submitted correctly.`,
+    });
+  }
+
+  let fields = { email, password };
+
+  let user = await login({ email, password });
+
+  console.log(user);
+
+  if (user.error) {
+    return badRequest({
+      fields,
+      formError: `email/Password combination is incorrect`,
+    });
+  }
+
+  return json({ user });
+};
+
 export default function LoginRoute() {
+  let actionData = useActionData();
+  console.log(actionData);
+
   return (
     <>
       <div className="auth">
