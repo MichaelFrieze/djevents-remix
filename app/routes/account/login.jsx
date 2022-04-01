@@ -24,6 +24,13 @@ export let action = async ({ request }) => {
 
   console.log(user);
 
+  if (!user) {
+    return badRequest({
+      fields,
+      formError: `User doesn't exists.`,
+    });
+  }
+
   if (user.error) {
     return badRequest({
       fields,
