@@ -1,6 +1,6 @@
 import { FaUser } from 'react-icons/fa';
 import { Link, Form, json, useActionData } from 'remix';
-import { login } from '~/utils/session.server';
+import { login, createUserSession } from '~/utils/session.server';
 import authStyles from '~/styles/auth-form.css';
 
 export let links = () => [{ rel: 'stylesheet', href: authStyles }];
@@ -27,7 +27,7 @@ export let action = async ({ request }) => {
   if (!user) {
     return badRequest({
       fields,
-      formError: `User doesn't exists.`,
+      formError: `Wasn't able to get a "user" object from the session.`,
     });
   }
 
@@ -38,7 +38,9 @@ export let action = async ({ request }) => {
     });
   }
 
-  return json({ user });
+  return createUserSession(user.jwt);
+
+  // return json({ user });
 };
 
 export default function LoginRoute() {
