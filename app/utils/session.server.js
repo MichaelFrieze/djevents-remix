@@ -72,6 +72,10 @@ export let login = async ({ email, password }) => {
 };
 
 export let getUser = async (request) => {
+  if (!request.headers.get('cookie')) {
+    return null;
+  }
+
   let userToken = await getUserToken(request);
 
   try {
@@ -87,11 +91,10 @@ export let getUser = async (request) => {
     if (strapiUserRes.ok) {
       return user;
     } else {
-      throw new Error('User forbidden.');
+      console.log(strapiUserRes);
+      return null;
     }
   } catch {
-    throw new Error(
-      'Something went wrong trying to fetch user from the Strapi API.'
-    );
+    throw new Error('Something wrong with getting a user from Strapi.');
   }
 };

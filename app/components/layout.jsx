@@ -11,11 +11,11 @@ export let links = () => [
   ...footerLinks(),
 ];
 
-export let Layout = ({ children }) => {
+export let Layout = ({ children, user }) => {
   let routeLocation = useLocation();
   return (
     <div>
-      <Header />
+      <Header user={user} />
       {routeLocation.pathname === '/' && <Showcase />}
       <div className="container">{children}</div>
       <Footer />

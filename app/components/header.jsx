@@ -11,7 +11,8 @@ export let links = () => [
   ...searchLinks(),
 ];
 
-export let Header = () => {
+export let Header = ({ user }) => {
+  console.log(user);
   return (
     <header className="header">
       <div className="logo">
@@ -29,20 +30,39 @@ export let Header = () => {
               Events
             </NavLink>
           </li>
-          <li>
-            <NavLink prefetch="intent" to="/events/add">
-              Add Event
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              prefetch="intent"
-              to="/account/login"
-              className="btn-secondary btn-icon"
-            >
-              <FaSignInAlt /> Login
-            </NavLink>
-          </li>
+          {user ? (
+            <>
+              <li>
+                <NavLink prefetch="intent" to="/events/add">
+                  Add Event
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/account/dashboard">Dashboard</NavLink>
+              </li>
+              <li>
+                <NavLink
+                  prefetch="intent"
+                  to="/account/login"
+                  className="btn-secondary btn-icon"
+                >
+                  <FaSignOutAlt /> Logout
+                </NavLink>
+              </li>
+            </>
+          ) : (
+            <>
+              <li>
+                <NavLink
+                  prefetch="intent"
+                  to="/account/login"
+                  className="btn-secondary btn-icon"
+                >
+                  <FaSignInAlt /> Login
+                </NavLink>
+              </li>
+            </>
+          )}
         </ul>
       </nav>
     </header>

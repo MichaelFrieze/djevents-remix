@@ -35,16 +35,11 @@ export let meta = () => {
 export let loader = async ({ request }) => {
   let user = await getUser(request);
 
-  if (user) {
-    return user;
-  } else {
-    throw new Error('Could not get user in the root.');
-  }
+  return user;
 };
 
 export default function App() {
-  let loaderData = useLoaderData();
-  console.log(loaderData);
+  let user = useLoaderData();
 
   return (
     <html lang="en">
@@ -53,7 +48,7 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <Layout>
+        <Layout user={user}>
           <Outlet />
         </Layout>
         <ScrollRestoration />
