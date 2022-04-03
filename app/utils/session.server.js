@@ -71,7 +71,11 @@ export let getUser = async (request) => {
 
     let user = await strapiUserRes.json();
 
-    return user;
+    if (strapiUserRes.ok) {
+      return user;
+    } else {
+      throw new Error('User forbidden.');
+    }
   } catch {
     throw new Error(
       'Something went wrong trying to fetch user from the Strapi API.'
