@@ -22,8 +22,6 @@ export let action = async ({ request }) => {
 
   let user = await login({ email, password });
 
-  console.log(user);
-
   if (!user) {
     return badRequest({
       fields,
@@ -44,8 +42,7 @@ export let action = async ({ request }) => {
 };
 
 export default function LoginRoute() {
-  let actionData = useActionData();
-  console.log(actionData);
+  // let actionData = useActionData();
 
   return (
     <>

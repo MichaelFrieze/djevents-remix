@@ -60,7 +60,6 @@ export default function AddEventRoute() {
       throw new Error('Something Went Wrong');
     } else {
       let evt = await res.json();
-      console.log(evt);
       navigate(`/events/${evt.data.attributes.slug}`);
     }
   };

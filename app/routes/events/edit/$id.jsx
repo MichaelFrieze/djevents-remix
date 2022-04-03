@@ -61,7 +61,7 @@ export let loader = async ({ request, params: { id } }) => {
   let res = await fetch(`${process.env.API_URL}/api/events/${id}?populate=*`);
   let event = await res.json();
 
-  let userToken = await getUserToken(request);
+  // let userToken = await getUserToken(request);
 
   return event.data;
 };
