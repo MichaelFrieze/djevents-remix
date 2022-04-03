@@ -35,6 +35,19 @@ let storage = createCookieSessionStorage({
   },
 });
 
+let getUserSession = (request) => {
+  return storage.getSession(request.headers.get('Cookie'));
+};
+
+export let getUserToken = async (request) => {
+  let session = await getUserSession(request);
+  let userToken = session.get('userToken');
+  if (!userToken || typeof userToken !== 'string') {
+    return null;
+  }
+  return userToken;
+};
+
 export let createUserSession = async (userToken) => {
   let session = await storage.getSession();
   session.set('userToken', userToken);

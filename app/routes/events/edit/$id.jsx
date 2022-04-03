@@ -8,7 +8,8 @@ import {
   useNavigate,
   Outlet,
 } from 'remix';
-import { API_URL } from '~/config/index';
+import { getUserToken } from '~/utils/session.server';
+
 import formStyles from '~/styles/form.css';
 
 export let links = () => {
@@ -35,7 +36,7 @@ export let action = async ({ request }) => {
   };
   if (Object.values(fieldErrors).some(Boolean)) return { fieldErrors, fields };
 
-  let res = await fetch(`${API_URL}/api/events/${eventID}`, {
+  let res = await fetch(`${process.env.API_URL}/api/events/${eventID}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -56,9 +57,11 @@ export let action = async ({ request }) => {
   return redirect(`/events/${evt.data.attributes.slug}`);
 };
 
-export let loader = async ({ params: { id } }) => {
-  let res = await fetch(`${API_URL}/api/events/${id}?populate=*`);
+export let loader = async ({ request, params: { id } }) => {
+  let res = await fetch(`${process.env.API_URL}/api/events/${id}?populate=*`);
   let event = await res.json();
+
+  let userToken = await getUserToken(request);
 
   return event.data;
 };
