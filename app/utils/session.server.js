@@ -1,23 +1,5 @@
 import { createCookieSessionStorage, redirect } from 'remix';
 
-export let login = async ({ email, password }) => {
-  try {
-    let strapiLoginRes = await fetch(`${process.env.API_URL}/api/auth/local`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ identifier: email, password }),
-    });
-
-    let user = await strapiLoginRes.json();
-
-    return user;
-  } catch {
-    throw new Error(
-      'Something went wrong trying to fetch from the Strapi API.'
-    );
-  }
-};
-
 let sessionSecret = process.env.SESSION_SECRET;
 if (!sessionSecret) {
   throw new Error('SESSION_SECRET environment variable is not set.');
@@ -56,4 +38,43 @@ export let createUserSession = async (userToken) => {
       'Set-Cookie': await storage.commitSession(session),
     },
   });
+};
+
+export let login = async ({ email, password }) => {
+  try {
+    let strapiLoginRes = await fetch(`${process.env.API_URL}/api/auth/local`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ identifier: email, password }),
+    });
+
+    let user = await strapiLoginRes.json();
+
+    return user;
+  } catch {
+    throw new Error(
+      'Something went wrong trying to fetch from the Strapi API.'
+    );
+  }
+};
+
+export let getUser = async (request) => {
+  let userToken = await getUserToken(request);
+
+  try {
+    let strapiUserRes = await fetch(`${process.env.API_URL}/api/users/me`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+      },
+    });
+
+    let user = await strapiUserRes.json();
+
+    return user;
+  } catch {
+    throw new Error(
+      'Something went wrong trying to fetch user from the Strapi API.'
+    );
+  }
 };
