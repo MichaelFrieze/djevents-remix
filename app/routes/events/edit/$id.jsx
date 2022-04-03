@@ -8,7 +8,6 @@ import {
   useNavigate,
   Outlet,
 } from 'remix';
-import { getUserToken, getUser } from '~/utils/session.server';
 
 import formStyles from '~/styles/form.css';
 
@@ -60,12 +59,6 @@ export let action = async ({ request }) => {
 export let loader = async ({ request, params: { id } }) => {
   let res = await fetch(`${process.env.API_URL}/api/events/${id}?populate=*`);
   let event = await res.json();
-
-  let userToken = await getUserToken(request);
-  console.log('User Token: ', userToken);
-
-  let user = await getUser(request);
-  console.log('User: ', user);
 
   return event.data;
 };

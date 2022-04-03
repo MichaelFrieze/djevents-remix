@@ -1,5 +1,5 @@
 import { FaUser } from 'react-icons/fa';
-import { Link, Form, json, useActionData } from 'remix';
+import { Link, Form, json } from 'remix';
 import { login, createUserSession } from '~/utils/session.server';
 import authStyles from '~/styles/auth-form.css';
 
@@ -37,13 +37,9 @@ export let action = async ({ request }) => {
   }
 
   return createUserSession(user.jwt);
-
-  // return json({ user });
 };
 
 export default function LoginRoute() {
-  // let actionData = useActionData();
-
   return (
     <>
       <div className="auth">

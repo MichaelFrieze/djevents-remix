@@ -18,26 +18,39 @@ let storage = createCookieSessionStorage({
 });
 
 let getUserSession = (request) => {
-  return storage.getSession(request.headers.get('Cookie'));
+  try {
+    let session = storage.getSession(request.headers.get('Cookie'));
+    return session;
+  } catch {
+    throw new Error('Could not get user session.');
+  }
 };
 
 export let getUserToken = async (request) => {
-  let session = await getUserSession(request);
-  let userToken = session.get('userToken');
-  if (!userToken || typeof userToken !== 'string') {
-    return null;
+  try {
+    let session = await getUserSession(request);
+    let userToken = session.get('userToken');
+    if (!userToken || typeof userToken !== 'string') {
+      return null;
+    }
+    return userToken;
+  } catch {
+    throw new Error('Could not get user token.');
   }
-  return userToken;
 };
 
 export let createUserSession = async (userToken) => {
-  let session = await storage.getSession();
-  session.set('userToken', userToken);
-  return redirect('/events', {
-    headers: {
-      'Set-Cookie': await storage.commitSession(session),
-    },
-  });
+  try {
+    let session = await storage.getSession();
+    session.set('userToken', userToken);
+    return redirect('/events', {
+      headers: {
+        'Set-Cookie': await storage.commitSession(session),
+      },
+    });
+  } catch {
+    throw new Error('Could not create user session.');
+  }
 };
 
 export let login = async ({ email, password }) => {

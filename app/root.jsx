@@ -5,7 +5,9 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from 'remix';
+import { getUser } from '~/utils/session.server.js';
 import { Layout, links as layoutLinks } from '~/components/layout';
 
 import globalStyles from '~/styles/global.css';
@@ -30,7 +32,20 @@ export let meta = () => {
   };
 };
 
+export let loader = async ({ request }) => {
+  let user = await getUser(request);
+
+  if (user) {
+    return user;
+  } else {
+    throw new Error('Could not get user in the root.');
+  }
+};
+
 export default function App() {
+  let loaderData = useLoaderData();
+  console.log(loaderData);
+
   return (
     <html lang="en">
       <head>
