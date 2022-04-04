@@ -9,7 +9,6 @@ import {
 } from 'remix';
 import { useState } from 'react';
 import { FaTimes } from 'react-icons/fa';
-import { API_URL } from '~/config/index';
 import modalStyles from '~/styles/modal.css';
 import formStyles from '~/styles/form.css';
 
@@ -43,22 +42,25 @@ export let action = async ({ request }) => {
 
   // get event
   let eventResponse = await fetch(
-    `${API_URL}/api/events/${eventID}?populate=image`
+    `${process.env.API_URL}/api/events/${eventID}?populate=image`
   );
   let event = await eventResponse.json();
 
   // Delete previous image if exists
   if (event.data.attributes.image.data?.id) {
     let imageID = event.data.attributes.image.data.id;
-    let deletePrevImg = await fetch(`${API_URL}/api/upload/files/${imageID}`, {
-      method: 'DELETE',
-    });
+    let deletePrevImg = await fetch(
+      `${process.env.API_URL}/api/upload/files/${imageID}`,
+      {
+        method: 'DELETE',
+      }
+    );
     if (!deletePrevImg.ok) {
       throw new Error('Something Went Wrong');
     }
   }
 
-  let uploadResponse = await fetch(`${API_URL}/api/upload`, {
+  let uploadResponse = await fetch(`${process.env.API_URL}/api/upload`, {
     method: 'POST',
     body: uploadData,
   });

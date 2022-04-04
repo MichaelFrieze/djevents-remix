@@ -1,5 +1,4 @@
 import { Link, Form, redirect, useActionData } from 'remix';
-import { API_URL } from '~/config/index';
 import addEventStyles from '~/styles/add.css';
 
 export let links = () => {
@@ -26,7 +25,7 @@ export let action = async ({ request }) => {
   };
   if (Object.values(fieldErrors).some(Boolean)) return { fieldErrors, fields };
 
-  let res = await fetch(`${API_URL}/api/events`, {
+  let res = await fetch(`${process.env.API_URL}/api/events`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

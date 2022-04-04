@@ -1,7 +1,6 @@
 import { Link, useLoaderData } from 'remix';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { API_URL } from '~/config/index';
 import addEventStyles from '~/styles/routes/events/add.css';
 
 export let links = () => {
@@ -14,6 +13,7 @@ export let links = () => {
 };
 
 export let loader = async () => {
+  let API_URL = process.env.API_URL;
   return API_URL;
 };
 

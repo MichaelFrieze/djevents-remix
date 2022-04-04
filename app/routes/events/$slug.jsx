@@ -1,6 +1,5 @@
 import { FaPencilAlt, FaTimes } from 'react-icons/fa';
 import { Link, useLoaderData, Form, redirect } from 'remix';
-import { API_URL } from '~/config/index';
 import eventStyles from '~/styles/event.css';
 
 export let links = () => {
@@ -17,7 +16,7 @@ export let action = async ({ request }) => {
   let { _action, eventID } = Object.fromEntries(formData);
 
   if (_action === 'delete') {
-    let res = await fetch(`${API_URL}/api/events/${eventID}`, {
+    let res = await fetch(`${process.env.API_URL}/api/events/${eventID}`, {
       method: 'DELETE',
     });
 
@@ -39,7 +38,7 @@ export let action = async ({ request }) => {
 
 export let loader = async ({ params: { slug } }) => {
   let res = await fetch(
-    `${API_URL}/api/events?filters[slug][$eq]=${slug}&populate=image`
+    `${process.env.API_URL}/api/events?filters[slug][$eq]=${slug}&populate=image`
   );
   let event = await res.json();
 
