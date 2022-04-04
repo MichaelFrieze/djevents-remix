@@ -44,6 +44,7 @@ export let createUserSession = async (userToken) => {
   try {
     let session = await storage.getSession();
     session.set('userToken', userToken);
+
     return redirect('/events', {
       headers: {
         'Set-Cookie': await storage.commitSession(session),
@@ -67,7 +68,7 @@ export let login = async ({ email, password }) => {
     return user;
   } catch {
     throw new Error(
-      'Something went wrong trying to fetch from the Strapi API.'
+      'Something went wrong trying to fetch from the Strapi API. Maybe Strapi is down?'
     );
   }
 };
@@ -93,10 +94,21 @@ export let getUser = async (request) => {
     if (strapiUserRes.ok) {
       return user;
     } else {
-      console.log('strapiUserRes was not okay: ', strapiUserRes);
+      console.log('Strapi user not found: ', strapiUserRes);
       return null;
     }
   } catch {
-    throw new Error('Something wrong with getting a user from Strapi.');
+    throw new Error(
+      'Something wrong with getting a user from Strapi. Maybe strapi is down?'
+    );
   }
+};
+
+export let logout = async (request) => {
+  let session = await getUserSession(request);
+  return redirect('/account/login', {
+    headers: {
+      'Set-Cookie': await storage.destroySession(session),
+    },
+  });
 };

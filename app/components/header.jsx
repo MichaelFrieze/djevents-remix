@@ -44,13 +44,18 @@ export let Header = () => {
                 <NavLink to="/account/dashboard">Dashboard</NavLink>
               </li>
               <li>
-                <NavLink
+                {/* <NavLink
                   prefetch="intent"
                   to="/account/login"
                   className="btn-secondary btn-icon"
                 >
                   <FaSignOutAlt /> Logout
-                </NavLink>
+                </NavLink> */}
+                <form action="/account/logout" method="post">
+                  <button type="submit">
+                    <FaSignOutAlt /> Logout
+                  </button>
+                </form>
               </li>
             </>
           ) : (
