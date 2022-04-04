@@ -40,6 +40,7 @@ export let getUserToken = async (request) => {
 };
 
 export let createUserSession = async (userToken) => {
+  console.log('===============CREATING USER SESSION===============');
   try {
     let session = await storage.getSession();
     session.set('userToken', userToken);
@@ -72,13 +73,14 @@ export let login = async ({ email, password }) => {
 };
 
 export let getUser = async (request) => {
-  if (!request.headers.get('cookie')) {
+  if (!request.headers.get('Cookie')) {
+    console.log('No cookie found');
     return null;
   }
 
-  let userToken = await getUserToken(request);
-
   try {
+    let userToken = await getUserToken(request);
+
     let strapiUserRes = await fetch(`${process.env.API_URL}/api/users/me`, {
       method: 'GET',
       headers: {
@@ -91,7 +93,7 @@ export let getUser = async (request) => {
     if (strapiUserRes.ok) {
       return user;
     } else {
-      console.log(strapiUserRes);
+      console.log('strapiUserRes was not okay: ', strapiUserRes);
       return null;
     }
   } catch {

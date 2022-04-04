@@ -1,5 +1,5 @@
 import { FaSignInAlt, FaSignOutAlt } from 'react-icons/fa';
-import { NavLink } from 'remix';
+import { NavLink, useLoaderData } from 'remix';
 import { Search, links as searchLinks } from '~/components/search';
 import headerStyles from '~/styles/header.css';
 
@@ -11,8 +11,11 @@ export let links = () => [
   ...searchLinks(),
 ];
 
-export let Header = ({ user }) => {
-  console.log(user);
+export let Header = () => {
+  // getting user from loader in the root
+  // header will always be in root since it's a part of layout
+  let user = useLoaderData();
+
   return (
     <header className="header">
       <div className="logo">

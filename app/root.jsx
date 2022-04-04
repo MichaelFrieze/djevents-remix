@@ -5,7 +5,6 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useLoaderData,
 } from 'remix';
 import { getUser } from '~/utils/session.server.js';
 import { Layout, links as layoutLinks } from '~/components/layout';
@@ -39,8 +38,6 @@ export let loader = async ({ request }) => {
 };
 
 export default function App() {
-  let user = useLoaderData();
-
   return (
     <html lang="en">
       <head>
@@ -48,7 +45,7 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <Layout user={user}>
+        <Layout>
           <Outlet />
         </Layout>
         <ScrollRestoration />
