@@ -40,7 +40,7 @@ export let action = async ({ request }) => {
   if (!user) {
     return {
       fields,
-      formError: `Wasn't able to get a "user" object from the session.`,
+      formError: `Wasn't able to get a user object from the login function in session utils.`,
     };
   }
 

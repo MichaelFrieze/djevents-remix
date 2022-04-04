@@ -109,3 +109,24 @@ export let logout = async (request) => {
     },
   });
 };
+
+export let register = async ({ username, email, password }) => {
+  try {
+    let strapiLoginRes = await fetch(
+      `${process.env.API_URL}/api/auth/local/register`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password }),
+      }
+    );
+
+    let user = await strapiLoginRes.json();
+
+    return user;
+  } catch {
+    throw new Error(
+      'Something went wrong trying to fetch from the Strapi API to register. Maybe Strapi is down?'
+    );
+  }
+};
