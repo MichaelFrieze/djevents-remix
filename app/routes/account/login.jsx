@@ -1,11 +1,21 @@
 import { FaUser } from 'react-icons/fa';
-import { Link, Form, json } from 'remix';
+import { Link, Form, useActionData } from 'remix';
 import { login, createUserSession } from '~/utils/session.server';
 import authStyles from '~/styles/auth-form.css';
 
 export let links = () => [{ rel: 'stylesheet', href: authStyles }];
 
-let badRequest = (data) => json(data, { status: 400 });
+let validateEmail = (email) => {
+  if (typeof email !== 'string' || email.length < 3) {
+    return `Email must be at least 3 characters long`;
+  }
+};
+
+let validatePassword = (password) => {
+  if (typeof password !== 'string' || password.length < 3) {
+    return `Password must be at least 3 characters long`;
+  }
+};
 
 export let action = async ({ request }) => {
   let form = await request.formData();
@@ -13,47 +23,103 @@ export let action = async ({ request }) => {
   let password = form.get('password');
 
   if (typeof email !== 'string' || typeof password !== 'string') {
-    return badRequest({
+    return {
       formError: `Form not submitted correctly.`,
-    });
+    };
   }
 
   let fields = { email, password };
+  let fieldErrors = {
+    email: validateEmail(email),
+    password: validatePassword(password),
+  };
+  if (Object.values(fieldErrors).some(Boolean)) return { fieldErrors, fields };
 
   let user = await login({ email, password });
 
   if (!user) {
-    return badRequest({
+    return {
       fields,
       formError: `Wasn't able to get a "user" object from the session.`,
-    });
+    };
   }
 
   if (user.error) {
-    return badRequest({
+    return {
       fields,
       formError: `email/Password combination is incorrect`,
-    });
+    };
   }
 
   return createUserSession(user.jwt);
 };
 
 export default function LoginRoute() {
+  let actionData = useActionData();
+
   return (
     <>
       <div className="auth">
         <h1>
           <FaUser /> Log In
         </h1>
-        <Form method="post">
+        <Form
+          method="post"
+          aria-describedby={
+            actionData?.formError ? 'form-error-message' : undefined
+          }
+        >
           <div>
             <label htmlFor="email">Email Address</label>
-            <input type="email" id="email" name="email" />
+            <input
+              type="email"
+              id="email"
+              name="email"
+              defaultValue={actionData?.fields?.email}
+              aria-invalid={Boolean(actionData?.fieldErrors?.email)}
+              aria-describedby={
+                actionData?.fieldErrors?.email ? 'email-error' : undefined
+              }
+            />
+            {actionData?.fieldErrors?.email ? (
+              <p
+                className="form-validation-error"
+                role="alert"
+                id="email-error"
+              >
+                {actionData?.fieldErrors.email}
+              </p>
+            ) : null}
           </div>
           <div>
             <label htmlFor="password">Password</label>
-            <input type="password" id="password" name="password" />
+            <input
+              type="password"
+              id="password"
+              name="password"
+              defaultValue={actionData?.fields?.password}
+              aria-invalid={Boolean(actionData?.fieldErrors?.password)}
+              aria-describedby={
+                actionData?.fieldErrors?.password ? 'password-error' : undefined
+              }
+            />
+            {actionData?.fieldErrors?.password ? (
+              <p
+                className="form-validation-error"
+                role="alert"
+                id="password-error"
+              >
+                {actionData?.fieldErrors.password}
+              </p>
+            ) : null}
+          </div>
+
+          <div id="form-error-message">
+            {actionData?.formError ? (
+              <p className="form-validation-error" role="alert">
+                {actionData?.formError}
+              </p>
+            ) : null}
           </div>
 
           <button type="submit" className="btn">
