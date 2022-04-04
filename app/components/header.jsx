@@ -1,5 +1,6 @@
 import { FaSignInAlt, FaSignOutAlt } from 'react-icons/fa';
-import { NavLink, useLoaderData } from 'remix';
+import { NavLink, useLoaderData, useNavigate } from 'remix';
+import { useEffect } from 'react';
 import { Search, links as searchLinks } from '~/components/search';
 import headerStyles from '~/styles/header.css';
 
@@ -15,6 +16,11 @@ export let Header = () => {
   // getting user from loader in the root
   // header will always be in root since it's a part of layout
   let user = useLoaderData();
+  let navigate = useNavigate();
+
+  let handleLoginBtn = () => {
+    navigate('/account/login');
+  };
 
   return (
     <header className="header">
@@ -44,15 +50,8 @@ export let Header = () => {
                 <NavLink to="/account/dashboard">Dashboard</NavLink>
               </li>
               <li>
-                {/* <NavLink
-                  prefetch="intent"
-                  to="/account/login"
-                  className="btn-secondary btn-icon"
-                >
-                  <FaSignOutAlt /> Logout
-                </NavLink> */}
                 <form action="/account/logout" method="post">
-                  <button type="submit">
+                  <button type="submit" className="btn-secondary btn-icon">
                     <FaSignOutAlt /> Logout
                   </button>
                 </form>
@@ -61,13 +60,13 @@ export let Header = () => {
           ) : (
             <>
               <li>
-                <NavLink
-                  prefetch="intent"
-                  to="/account/login"
+                <button
+                  type="button"
                   className="btn-secondary btn-icon"
+                  onClick={handleLoginBtn}
                 >
                   <FaSignInAlt /> Login
-                </NavLink>
+                </button>
               </li>
             </>
           )}
