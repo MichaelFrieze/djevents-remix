@@ -9,12 +9,12 @@ export let links = () => [
   },
 ];
 
-export let Footer = ({ event, handleDelete }) => {
+export let DashboardEvent = ({ event, handleDelete }) => {
   return (
     <div className="event">
       <h4>
-        <Link prefetch="intent" to={`/events/${event.slug}`}>
-          {event.name}
+        <Link prefetch="intent" to={`/events/${event.attributes.slug}`}>
+          {event.attributes.name}
         </Link>
       </h4>
       <Link to={`/events/edit/${event.id}`} className="edit">
