@@ -1,9 +1,9 @@
-import { useLoaderData } from 'remix';
+import { useLoaderData, redirect } from 'remix';
 import {
   DashboardEvent,
   links as dashboardEventLinks,
 } from '~/components/dashboard-event';
-import { getUser } from '~/utils/session.server';
+import { getUser, getUserToken } from '~/utils/session.server';
 
 import dashboardStyles from '~/styles/dashboard.css';
 
@@ -14,6 +14,35 @@ export let links = () => [
   },
   ...dashboardEventLinks(),
 ];
+
+export let action = async ({ request }) => {
+  let formData = await request.formData();
+  let { _action, eventID } = Object.fromEntries(formData);
+  let userToken = await getUserToken(request);
+
+  if (_action === 'delete') {
+    let res = await fetch(`${process.env.API_URL}/api/events/${eventID}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+      },
+    });
+
+    let data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message);
+    } else {
+      return redirect('/account/dashboard');
+    }
+  }
+
+  if (_action === 'edit') {
+    return redirect(`/events/edit/${eventID}`);
+  }
+
+  return formData;
+};
 
 export let loader = async ({ request }) => {
   let user = await getUser(request);
@@ -30,9 +59,6 @@ export let loader = async ({ request }) => {
 
 export default function DashboardRoute() {
   let events = useLoaderData();
-  let deleteEvent = (id) => {
-    console.log(id);
-  };
 
   return (
     <>
@@ -41,11 +67,7 @@ export default function DashboardRoute() {
         <h3>My Events</h3>
 
         {events.map((event) => (
-          <DashboardEvent
-            key={event.id}
-            event={event}
-            handleDelete={deleteEvent}
-          />
+          <DashboardEvent key={event.id} event={event} />
         ))}
       </div>
     </>

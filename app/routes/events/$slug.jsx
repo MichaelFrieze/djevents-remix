@@ -1,5 +1,4 @@
-import { FaPencilAlt, FaTimes } from 'react-icons/fa';
-import { Link, useLoaderData, Form, redirect } from 'remix';
+import { Link, useLoaderData } from 'remix';
 import eventStyles from '~/styles/event.css';
 
 export let links = () => {
@@ -9,31 +8,6 @@ export let links = () => {
       href: eventStyles,
     },
   ];
-};
-
-export let action = async ({ request }) => {
-  let formData = await request.formData();
-  let { _action, eventID } = Object.fromEntries(formData);
-
-  if (_action === 'delete') {
-    let res = await fetch(`${process.env.API_URL}/api/events/${eventID}`, {
-      method: 'DELETE',
-    });
-
-    let data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.message);
-    } else {
-      return redirect('/events');
-    }
-  }
-
-  if (_action === 'edit') {
-    return redirect(`/events/edit/${eventID}`);
-  }
-
-  return formData;
 };
 
 export let loader = async ({ params: { slug } }) => {
@@ -51,31 +25,6 @@ export default function EventRoute() {
   return (
     <>
       <div className="event">
-        <div className="controls">
-          <Form method="post">
-            <input type="hidden" name="eventID" value={event.id} />
-            <button
-              type="submit"
-              className="btn-secondary"
-              name="_action"
-              value="edit"
-            >
-              <FaPencilAlt /> Edit Event
-            </button>
-          </Form>
-          <Form method="post">
-            <input type="hidden" name="eventID" value={event.id} />
-            <button
-              type="submit"
-              className="btn-secondary"
-              name="_action"
-              value="delete"
-            >
-              <FaTimes /> Delete Event
-            </button>
-          </Form>
-        </div>
-
         <span>
           {event.attributes.date} at {event.attributes.time}
         </span>
