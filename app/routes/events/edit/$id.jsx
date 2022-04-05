@@ -8,6 +8,7 @@ import {
   useNavigate,
   Outlet,
 } from 'remix';
+import { getUserToken } from '~/utils/session.server';
 
 import formStyles from '~/styles/form.css';
 
@@ -35,10 +36,13 @@ export let action = async ({ request }) => {
   };
   if (Object.values(fieldErrors).some(Boolean)) return { fieldErrors, fields };
 
+  let userToken = await getUserToken(request);
+
   let res = await fetch(`${process.env.API_URL}/api/events/${eventID}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${userToken}`,
     },
     body: JSON.stringify({
       data: {
