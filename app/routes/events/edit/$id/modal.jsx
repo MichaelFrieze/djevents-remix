@@ -8,6 +8,7 @@ import {
   useTransition,
 } from 'remix';
 import { useState } from 'react';
+import { getUserToken } from '~/utils/session.server';
 import { FaTimes } from 'react-icons/fa';
 import modalStyles from '~/styles/modal.css';
 import formStyles from '~/styles/form.css';
@@ -26,6 +27,8 @@ export let links = () => {
 };
 
 export let action = async ({ request }) => {
+  let userToken = await getUserToken(request);
+
   let uploadHandler = unstable_createMemoryUploadHandler({
     maxFileSize: 20_000_000,
   });
@@ -53,6 +56,9 @@ export let action = async ({ request }) => {
       `${process.env.API_URL}/api/upload/files/${imageID}`,
       {
         method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
       }
     );
     if (!deletePrevImg.ok) {
@@ -62,6 +68,9 @@ export let action = async ({ request }) => {
 
   let uploadResponse = await fetch(`${process.env.API_URL}/api/upload`, {
     method: 'POST',
+    headers: {
+      Authorization: `Bearer ${userToken}`,
+    },
     body: uploadData,
   });
 
