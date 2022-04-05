@@ -1,4 +1,6 @@
 import { Link, Form, redirect, useActionData } from 'remix';
+import { getUserToken } from '~/utils/session.server';
+
 import addEventStyles from '~/styles/add.css';
 
 export let links = () => {
@@ -10,9 +12,19 @@ export let links = () => {
   ];
 };
 
+export let loader = async ({ request }) => {
+  let userToken = await getUserToken(request);
+  if (!userToken) {
+    return redirect('/account/login');
+  }
+
+  return null;
+};
+
 export let action = async ({ request }) => {
   let formData = await request.formData();
   let fields = Object.fromEntries(formData);
+  let userToken = await getUserToken(request);
 
   let fieldErrors = {
     name: validateForm('name', fields.name),
@@ -29,6 +41,7 @@ export let action = async ({ request }) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${userToken}`,
     },
     body: JSON.stringify({
       data: {
@@ -38,6 +51,9 @@ export let action = async ({ request }) => {
   });
 
   if (!res.ok) {
+    if (res.status === 403 || res.status === 401) {
+      throw new Error('No token included');
+    }
     throw new Error('Something Went Wrong');
   }
 
