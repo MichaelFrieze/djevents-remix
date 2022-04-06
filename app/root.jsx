@@ -18,6 +18,8 @@ export let links = () => {
       rel: 'stylesheet',
       href: globalStyles,
     },
+    { rel: 'icon', href: '/favicon.ico' },
+
     ...layoutLinks(),
   ];
 };
