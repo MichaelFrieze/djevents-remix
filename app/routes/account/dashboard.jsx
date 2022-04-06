@@ -15,6 +15,12 @@ export let links = () => [
   ...dashboardEventLinks(),
 ];
 
+export let meta = () => {
+  return {
+    title: 'DJ Events | Dashboard',
+  };
+};
+
 export let action = async ({ request }) => {
   let formData = await request.formData();
   let { _action, eventID } = Object.fromEntries(formData);

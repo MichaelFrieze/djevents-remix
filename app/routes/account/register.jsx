@@ -6,6 +6,12 @@ import authStyles from '~/styles/auth-form.css';
 
 export let links = () => [{ rel: 'stylesheet', href: authStyles }];
 
+export let meta = () => {
+  return {
+    title: 'DJ Events | Register',
+  };
+};
+
 export let action = async ({ request }) => {
   let form = await request.formData();
   let username = form.get('username');

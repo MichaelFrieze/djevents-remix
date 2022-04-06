@@ -21,6 +21,12 @@ export let links = () => {
   ];
 };
 
+export let meta = () => {
+  return {
+    title: 'DJ Events | Edit Event',
+  };
+};
+
 export let action = async ({ request }) => {
   let formData = await request.formData();
   let { eventID, ...fields } = Object.fromEntries(formData);

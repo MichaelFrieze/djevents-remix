@@ -12,6 +12,12 @@ export let links = () => {
   ];
 };
 
+export let meta = () => {
+  return {
+    title: 'DJ Events | Add Event',
+  };
+};
+
 export let loader = async ({ request }) => {
   let userToken = await getUserToken(request);
   if (!userToken) {

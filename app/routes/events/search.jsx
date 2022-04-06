@@ -4,6 +4,12 @@ import { EventItem, links as eventItemLinks } from '~/components/event-item';
 
 export let links = () => [...eventItemLinks()];
 
+export let meta = () => {
+  return {
+    title: 'DJ Events | Search Events',
+  };
+};
+
 export let loader = async ({ request }) => {
   let url = new URL(request.url);
   let term = url.searchParams.get('term');
