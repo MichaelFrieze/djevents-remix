@@ -1,21 +1,9 @@
 import { FaUser } from 'react-icons/fa';
-import { Link, Form, useActionData } from 'remix';
-import { login, createUserSession } from '~/utils/session.server';
+import { Link, Form, useActionData, redirect } from 'remix';
+import { login, createUserSession, getUser } from '~/utils/session.server';
 import authStyles from '~/styles/auth-form.css';
 
 export let links = () => [{ rel: 'stylesheet', href: authStyles }];
-
-let validateEmail = (email) => {
-  if (typeof email !== 'string' || email.length < 3) {
-    return `Email must be at least 3 characters long`;
-  }
-};
-
-let validatePassword = (password) => {
-  if (typeof password !== 'string' || password.length < 3) {
-    return `Password must be at least 3 characters long`;
-  }
-};
 
 export let action = async ({ request }) => {
   let form = await request.formData();
@@ -52,6 +40,16 @@ export let action = async ({ request }) => {
   }
 
   return createUserSession(user.jwt);
+};
+
+export let loader = async ({ request }) => {
+  let user = await getUser(request);
+
+  if (user) {
+    return redirect('/');
+  } else {
+    return null;
+  }
 };
 
 export default function LoginRoute() {
@@ -137,3 +135,15 @@ export default function LoginRoute() {
     </>
   );
 }
+
+let validateEmail = (email) => {
+  if (typeof email !== 'string' || email.length < 3) {
+    return `Email must be at least 3 characters long`;
+  }
+};
+
+let validatePassword = (password) => {
+  if (typeof password !== 'string' || password.length < 3) {
+    return `Password must be at least 3 characters long`;
+  }
+};
