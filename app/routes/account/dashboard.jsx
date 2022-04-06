@@ -46,6 +46,11 @@ export let action = async ({ request }) => {
 
 export let loader = async ({ request }) => {
   let user = await getUser(request);
+
+  if (!user) {
+    return redirect('/');
+  }
+
   let userID = user.id;
 
   let res = await fetch(
