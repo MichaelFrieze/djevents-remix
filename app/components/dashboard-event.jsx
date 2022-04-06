@@ -14,8 +14,8 @@ export let DashboardEvent = ({ event }) => {
   return (
     <div className="event">
       <h4>
-        <Link prefetch="intent" to={`/events/${event.attributes.slug}`}>
-          {event.attributes.name}
+        <Link prefetch="intent" to={`/events/${event.slug}`}>
+          {event.name}
         </Link>
       </h4>
 

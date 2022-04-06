@@ -51,19 +51,23 @@ export let loader = async ({ request }) => {
     return redirect('/');
   }
 
-  let userID = user.id;
+  let userToken = await getUserToken(request);
 
-  let res = await fetch(
-    `${process.env.API_URL}/api/events?filters[user][id][$eq]=${userID}&populate=*`
-  );
+  let res = await fetch(`${process.env.API_URL}/api/events/me?populate=*`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${userToken}`,
+    },
+  });
 
   let events = await res.json();
 
-  return events.data;
+  return events.data.attributes.results;
 };
 
 export default function DashboardRoute() {
   let events = useLoaderData();
+  console.log(events);
 
   return (
     <>
