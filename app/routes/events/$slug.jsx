@@ -1,7 +1,5 @@
-import { FaPencilAlt, FaTimes } from 'react-icons/fa';
 import { Link, useLoaderData } from 'remix';
-import { API_URL } from '~/config/index';
-import eventStyles from '~/styles/routes/events/$slug.css';
+import eventStyles from '~/styles/event.css';
 
 export let links = () => {
   return [
@@ -13,8 +11,8 @@ export let links = () => {
 };
 
 export let loader = async ({ params: { slug } }) => {
-  const res = await fetch(
-    `${API_URL}/api/events?filters[slug][$eq]=${slug}&populate=image`
+  let res = await fetch(
+    `${process.env.API_URL}/api/events?filters[slug][$eq]=${slug}&populate=image`
   );
   let event = await res.json();
 
@@ -24,27 +22,14 @@ export let loader = async ({ params: { slug } }) => {
 export default function EventRoute() {
   let event = useLoaderData();
 
-  const deleteEvent = (e) => {
-    console.log('delete');
-  };
-
   return (
     <>
       <div className="event">
-        <div className="controls">
-          <Link to="/">
-            <FaPencilAlt /> Edit Event
-          </Link>
-          <a href="#" className="delete" onClick={deleteEvent}>
-            <FaTimes /> Delete Event
-          </a>
-        </div>
-
         <span>
           {event.attributes.date} at {event.attributes.time}
         </span>
         <h1>{event.attributes.name}</h1>
-        {event.attributes.image.data && (
+        {event.attributes.image.data?.attributes.formats.medium?.url && (
           <div className="image">
             <img
               alt="Event"

@@ -36,7 +36,7 @@ h1 {
 }
 
 .btn:hover {
-  opacity: 0.9;
+  opacity: 0.8;
 }
 
 .btn-secondary {
@@ -70,4 +70,10 @@ h1 {
   margin-top: 0.25em;
   color: hsl(356, 100%, 71%);
   font-size: 0.8rem;
+}
+
+.error-container {
+  background-color: hsla(356, 77%, 59%, 0.747);
+  border-radius: 0.25rem;
+  padding: 0.5rem 1rem;
 }

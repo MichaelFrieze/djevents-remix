@@ -1,36 +1,35 @@
-import { Link, Form, redirect, useActionData } from 'remix';
+import { FaImage } from 'react-icons/fa';
+import {
+  Link,
+  useLoaderData,
+  Form,
+  redirect,
+  useActionData,
+  useNavigate,
+  Outlet,
+} from 'remix';
 import { getUserToken } from '~/utils/session.server';
 
-import addEventStyles from '~/styles/add.css';
+import formStyles from '~/styles/form.css';
 
 export let links = () => {
   return [
     {
       rel: 'stylesheet',
-      href: addEventStyles,
+      href: formStyles,
     },
   ];
 };
 
 export let meta = () => {
   return {
-    title: 'DJ Events | Add Event',
+    title: 'DJ Events | Edit Event',
   };
-};
-
-export let loader = async ({ request }) => {
-  let userToken = await getUserToken(request);
-  if (!userToken) {
-    return redirect('/account/login');
-  }
-
-  return null;
 };
 
 export let action = async ({ request }) => {
   let formData = await request.formData();
-  let fields = Object.fromEntries(formData);
-  let userToken = await getUserToken(request);
+  let { eventID, ...fields } = Object.fromEntries(formData);
 
   let fieldErrors = {
     name: validateForm('name', fields.name),
@@ -43,8 +42,10 @@ export let action = async ({ request }) => {
   };
   if (Object.values(fieldErrors).some(Boolean)) return { fieldErrors, fields };
 
-  let res = await fetch(`${process.env.API_URL}/api/events`, {
-    method: 'POST',
+  let userToken = await getUserToken(request);
+
+  let res = await fetch(`${process.env.API_URL}/api/events/${eventID}`, {
+    method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${userToken}`,
@@ -57,9 +58,6 @@ export let action = async ({ request }) => {
   });
 
   if (!res.ok) {
-    if (res.status === 403 || res.status === 401) {
-      throw new Error('No token included');
-    }
     throw new Error('Something Went Wrong');
   }
 
@@ -68,13 +66,27 @@ export let action = async ({ request }) => {
   return redirect(`/events/${evt.data.attributes.slug}`);
 };
 
-export default function AddEventRoute() {
+export let loader = async ({ request, params: { id } }) => {
+  let res = await fetch(`${process.env.API_URL}/api/events/${id}?populate=*`);
+  let event = await res.json();
+
+  return event.data;
+};
+
+export default function EditEventRoute() {
+  let loaderData = useLoaderData();
   let actionData = useActionData();
+  let navigate = useNavigate();
+  let eventID = loaderData.id;
+
+  let handleButtonClick = async () => {
+    navigate(`/events/edit/${eventID}/modal`);
+  };
 
   return (
     <>
       <Link to="/events">Go Back</Link>
-      <h1>Add Event</h1>
+      <h1>Edit Event</h1>
       <Form method="post" className="form">
         <div className="grid">
           <div>
@@ -83,7 +95,7 @@ export default function AddEventRoute() {
               type="text"
               id="name"
               name="name"
-              defaultValue={actionData?.fields?.name}
+              defaultValue={loaderData.attributes.name}
               aria-invalid={Boolean(actionData?.fieldErrors?.name)}
               aria-describedby={
                 actionData?.fieldErrors?.name ? 'name-error' : undefined
@@ -101,7 +113,7 @@ export default function AddEventRoute() {
               type="text"
               name="performers"
               id="performers"
-              defaultValue={actionData?.fields?.performers}
+              defaultValue={loaderData.attributes.performers}
               aria-invalid={Boolean(actionData?.fieldErrors?.performers)}
               aria-describedby={
                 actionData?.fieldErrors?.performers
@@ -125,7 +137,7 @@ export default function AddEventRoute() {
               type="text"
               name="venue"
               id="venue"
-              defaultValue={actionData?.fields?.venue}
+              defaultValue={loaderData.attributes.venue}
               aria-invalid={Boolean(actionData?.fieldErrors?.venue)}
               aria-describedby={
                 actionData?.fieldErrors?.venue ? 'venue-error' : undefined
@@ -147,7 +159,7 @@ export default function AddEventRoute() {
               type="text"
               name="address"
               id="address"
-              defaultValue={actionData?.fields?.address}
+              defaultValue={loaderData.attributes.address}
               aria-invalid={Boolean(actionData?.fieldErrors?.address)}
               aria-describedby={
                 actionData?.fieldErrors?.address ? 'address-error' : undefined
@@ -169,6 +181,7 @@ export default function AddEventRoute() {
               type="date"
               name="date"
               id="date"
+              defaultValue={loaderData.attributes.date}
               aria-invalid={Boolean(actionData?.fieldErrors?.date)}
               aria-describedby={
                 actionData?.fieldErrors?.date ? 'date-error' : undefined
@@ -186,7 +199,7 @@ export default function AddEventRoute() {
               type="text"
               name="time"
               id="time"
-              defaultValue={actionData?.fields?.time}
+              defaultValue={loaderData.attributes.time}
               aria-invalid={Boolean(actionData?.fieldErrors?.time)}
               aria-describedby={
                 actionData?.fieldErrors?.time ? 'time-error' : undefined
@@ -199,14 +212,13 @@ export default function AddEventRoute() {
             ) : null}
           </div>
         </div>
-
         <div>
           <label htmlFor="description">Event Description</label>
           <textarea
             type="text"
             name="description"
             id="description"
-            defaultValue={actionData?.fields?.description}
+            defaultValue={loaderData.attributes.description}
             aria-invalid={Boolean(actionData?.fieldErrors?.description)}
             aria-describedby={
               actionData?.fieldErrors?.description
@@ -225,10 +237,39 @@ export default function AddEventRoute() {
           ) : null}
         </div>
 
+        <input type="hidden" name="eventID" value={loaderData.id} />
+
         <button className="btn" type="submit">
-          Add Event
+          Update Event
         </button>
       </Form>
+
+      <Outlet />
+      <h2>Event Image</h2>
+      {loaderData.attributes.image.data ? (
+        <img
+          src={
+            loaderData.attributes.image.data.attributes.formats.thumbnail.url
+          }
+          alt="Event"
+          height={100}
+          width={170}
+          // onClick={handleButtonClick}
+        />
+      ) : (
+        <div>
+          <p>No image uploaded</p>
+        </div>
+      )}
+      <div>
+        <button
+          type="button"
+          className="btn-secondary btn-icon"
+          onClick={handleButtonClick}
+        >
+          <FaImage /> Set Image
+        </button>
+      </div>
     </>
   );
 }

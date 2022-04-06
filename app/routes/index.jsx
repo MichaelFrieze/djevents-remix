@@ -1,12 +1,11 @@
 import { Link, useLoaderData } from 'remix';
 import { EventItem, links as eventItemLinks } from '~/components/event-item';
-import { API_URL } from '~/config/index';
 
 export let links = () => [...eventItemLinks()];
 
 export let loader = async () => {
   let res = await fetch(
-    `${API_URL}/api/events?sort=date&pagination[limit]=3&populate=*`
+    `${process.env.API_URL}/api/events?sort=date&pagination[limit]=3&populate=*`
   );
   let events = await res.json();
 

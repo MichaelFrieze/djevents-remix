@@ -1,6 +1,6 @@
 export let meta = () => {
   return {
-    title: 'About DJ Events',
+    title: 'DJ Events | About',
   };
 };
 

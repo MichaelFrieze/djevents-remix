@@ -1,15 +1,20 @@
 import qs from 'qs';
 import { useLoaderData, Link } from 'remix';
 import { EventItem, links as eventItemLinks } from '~/components/event-item';
-import { API_URL } from '~/config/index';
 
 export let links = () => [...eventItemLinks()];
+
+export let meta = () => {
+  return {
+    title: 'DJ Events | Search Events',
+  };
+};
 
 export let loader = async ({ request }) => {
   let url = new URL(request.url);
   let term = url.searchParams.get('term');
 
-  const query = qs.stringify(
+  let query = qs.stringify(
     {
       filters: {
         $or: [
@@ -41,7 +46,9 @@ export let loader = async ({ request }) => {
     }
   );
 
-  let res = await fetch(`${API_URL}/api/events?${query}&populate=image`);
+  let res = await fetch(
+    `${process.env.API_URL}/api/events?${query}&populate=image`
+  );
   let { data } = await res.json();
 
   return {

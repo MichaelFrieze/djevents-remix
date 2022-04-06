@@ -1,5 +1,5 @@
 import { Link } from 'remix';
-import eventItemStyles from '~/styles/components/event-item.css';
+import eventItemStyles from '~/styles/event-item.css';
 
 export let links = () => [
   {

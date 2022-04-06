@@ -1,4 +1,4 @@
-import showcaseStyles from '~/styles/components/showcase.css';
+import showcaseStyles from '~/styles/showcase.css';
 
 export let links = () => [
   {

@@ -1,18 +1,28 @@
 import { useLoaderData } from 'remix';
 import { EventItem, links as eventItemLinks } from '~/components/event-item';
-import { API_URL } from '~/config/index';
+import { Pagination } from '~/components/pagination';
 
 export let links = () => [...eventItemLinks()];
 
-export let loader = async () => {
-  let res = await fetch(`${API_URL}/api/events?sort=date&populate=*`);
+export let loader = async ({ request }) => {
+  // Get page from params
+  let url = new URL(request.url);
+  let page = Number(url.searchParams.get('page') ?? 1);
+
+  // Fetch events
+  let res = await fetch(
+    `${process.env.API_URL}/api/events?sort=date&pagination[page]=${page}&pagination[pageSize]=${process.env.PER_PAGE}&populate=*`
+  );
   let events = await res.json();
 
-  return events.data;
+  return events;
 };
 
 export default function EventsIndexRoute() {
-  let events = useLoaderData();
+  let { data, meta } = useLoaderData();
+  let page = meta.pagination.page;
+  let pageCount = meta.pagination.pageCount;
+  let events = data;
 
   return (
     <>
@@ -22,6 +32,8 @@ export default function EventsIndexRoute() {
       {events.map((evt) => (
         <EventItem key={evt.id} evt={evt} />
       ))}
+
+      <Pagination page={page} pageCount={pageCount} />
     </>
   );
 }
