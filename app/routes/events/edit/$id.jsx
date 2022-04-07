@@ -58,19 +58,38 @@ export let action = async ({ request }) => {
   });
 
   if (!res.ok) {
-    throw new Error('Something Went Wrong');
+    console.error(res);
+
+    let resObj = await res.json();
+    throw new Error(
+      `${resObj.error.status} | ${resObj.error.name} | Message: ${
+        resObj.error.message
+      } | Details: ${JSON.stringify(resObj.error.details)}`
+    );
   }
 
-  let evt = await res.json();
+  let resObj = await res.json();
 
-  return redirect(`/events/${evt.data.attributes.slug}`);
+  return redirect(`/events/${resObj.data.attributes.slug}`);
 };
 
 export let loader = async ({ request, params: { id } }) => {
   let res = await fetch(`${process.env.API_URL}/api/events/${id}?populate=*`);
-  let event = await res.json();
 
-  return event.data;
+  if (!res.ok) {
+    console.error(res);
+
+    let resObj = await res.json();
+    throw new Error(
+      `${resObj.error.status} | ${resObj.error.name} | Message: ${
+        resObj.error.message
+      } | Details: ${JSON.stringify(resObj.error.details)}`
+    );
+  }
+
+  let resObj = await res.json();
+
+  return resObj.data;
 };
 
 export default function EditEventRoute() {
@@ -312,4 +331,10 @@ function validateForm(field, value) {
       }
     }
   }
+}
+
+export function ErrorBoundary({ error }) {
+  console.error(error);
+
+  return <div className="error-container">{`${error}`}</div>;
 }

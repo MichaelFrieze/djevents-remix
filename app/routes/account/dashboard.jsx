@@ -34,10 +34,15 @@ export let action = async ({ request }) => {
       },
     });
 
-    let data = await res.json();
-
     if (!res.ok) {
-      throw new Error(data.message);
+      console.error(res);
+
+      let resObj = await res.json();
+      throw new Error(
+        `${resObj.error.status} | ${resObj.error.name} | Message: ${
+          resObj.error.message
+        } | Details: ${JSON.stringify(resObj.error.details)}`
+      );
     } else {
       return redirect('/account/dashboard');
     }
@@ -66,14 +71,24 @@ export let loader = async ({ request }) => {
     },
   });
 
-  let events = await res.json();
+  if (!res.ok) {
+    console.log(res);
 
-  return events.data.attributes.results;
+    let resObj = await res.json();
+    throw new Error(
+      `${resObj.error.status} | ${resObj.error.name} | Message: ${
+        resObj.error.message
+      } | Details: ${JSON.stringify(resObj.error.details)}`
+    );
+  }
+
+  let resObj = await res.json();
+
+  return resObj.data.attributes.results;
 };
 
 export default function DashboardRoute() {
   let events = useLoaderData();
-  console.log(events);
 
   return (
     <>
@@ -87,4 +102,10 @@ export default function DashboardRoute() {
       </div>
     </>
   );
+}
+
+export function ErrorBoundary({ error }) {
+  console.error(error);
+
+  return <div className="error-container">{`${error}`}</div>;
 }

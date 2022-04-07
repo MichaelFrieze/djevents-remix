@@ -49,6 +49,18 @@ export let loader = async ({ request }) => {
   let res = await fetch(
     `${process.env.API_URL}/api/events?${query}&populate=image`
   );
+
+  if (!res.ok) {
+    console.error(res);
+
+    let resObj = await res.json();
+    throw new Error(
+      `${resObj.error.status} | ${resObj.error.name} | Message: ${
+        resObj.error.message
+      } | Details: ${JSON.stringify(resObj.error.details)}`
+    );
+  }
+
   let { data } = await res.json();
 
   return {
@@ -71,4 +83,10 @@ export default function EventsSearchRoute() {
       ))}
     </>
   );
+}
+
+export function ErrorBoundary({ error }) {
+  console.error(error);
+
+  return <div className="error-container">{`${error}`}</div>;
 }

@@ -56,15 +56,19 @@ export let createUserSession = async (userToken) => {
 
 export let login = async ({ email, password }) => {
   try {
-    let strapiLoginRes = await fetch(`${process.env.API_URL}/api/auth/local`, {
+    let res = await fetch(`${process.env.API_URL}/api/auth/local`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ identifier: email, password }),
     });
 
-    let user = await strapiLoginRes.json();
+    if (!res.ok) {
+      console.error(res);
+    }
 
-    return user;
+    let resObj = await res.json();
+
+    return resObj;
   } catch {
     throw new Error(
       'Something went wrong trying to fetch from the Strapi API. Maybe Strapi is down?'
@@ -79,19 +83,23 @@ export let getUser = async (request) => {
 
   try {
     let userToken = await getUserToken(request);
+    if (!userToken) {
+      return null;
+    }
 
-    let strapiUserRes = await fetch(`${process.env.API_URL}/api/users/me`, {
+    let res = await fetch(`${process.env.API_URL}/api/users/me`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${userToken}`,
       },
     });
 
-    let user = await strapiUserRes.json();
+    let resObj = await res.json();
 
-    if (strapiUserRes.ok) {
-      return user;
+    if (res.ok) {
+      return resObj;
     } else {
+      console.error(res);
       return null;
     }
   } catch {
@@ -111,22 +119,24 @@ export let logout = async (request) => {
 };
 
 export let register = async ({ username, email, password }) => {
-  try {
-    let strapiLoginRes = await fetch(
-      `${process.env.API_URL}/api/auth/local/register`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password }),
-      }
-    );
+  let res = await fetch(`${process.env.API_URL}/api/auth/local/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, email, password }),
+  });
 
-    let user = await strapiLoginRes.json();
+  if (!res.ok) {
+    console.error(res);
 
-    return user;
-  } catch {
+    let resObj = await res.json();
     throw new Error(
-      'Something went wrong trying to fetch from the Strapi API to register. Maybe Strapi is down?'
+      `${resObj.error.status} | ${resObj.error.name} | Message: ${
+        resObj.error.message
+      } | Details: ${JSON.stringify(resObj.error.details)}`
     );
   }
+
+  let resObj = await res.json();
+
+  return resObj;
 };

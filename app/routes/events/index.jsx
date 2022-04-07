@@ -11,18 +11,35 @@ export let loader = async ({ request }) => {
 
   // Fetch events
   let res = await fetch(
-    `${process.env.API_URL}/api/events?sort=date&pagination[page]=${page}&pagination[pageSize]=${process.env.PER_PAGE}&populate=*`
+    `${process.env.API_URL}/api/events?sort=date&pagination[page]=${page}&pagination[pageSize]=${process.env.PER_PAGE}&populate=image`
   );
-  let events = await res.json();
 
-  return events;
+  if (!res.ok) {
+    console.error(res);
+
+    let resObj = await res.json();
+    throw new Error(
+      `${resObj.error.status} | ${resObj.error.name} | Message: ${
+        resObj.error.message
+      } | Details: ${JSON.stringify(resObj.error.details)}`
+    );
+  }
+
+  let resObj = await res.json();
+
+  let loaderData = {
+    events: resObj.data,
+    page: resObj.meta.pagination.page,
+    pageCount: resObj.meta.pagination.pageCount,
+  };
+
+  // console.log('Events: ', loaderData);
+
+  return loaderData;
 };
 
 export default function EventsIndexRoute() {
-  let { data, meta } = useLoaderData();
-  let page = meta.pagination.page;
-  let pageCount = meta.pagination.pageCount;
-  let events = data;
+  let { events, page, pageCount } = useLoaderData();
 
   return (
     <>
@@ -36,4 +53,10 @@ export default function EventsIndexRoute() {
       <Pagination page={page} pageCount={pageCount} />
     </>
   );
+}
+
+export function ErrorBoundary({ error }) {
+  console.error(error);
+
+  return <div className="error-container">{`${error}`}</div>;
 }
