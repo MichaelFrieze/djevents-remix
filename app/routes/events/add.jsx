@@ -1,5 +1,5 @@
 import { Link, Form, redirect, useActionData } from 'remix';
-import { getUserToken } from '~/utils/session.server';
+import { getUser, getUserToken } from '~/utils/session.server';
 
 import addEventStyles from '~/styles/add.css';
 
@@ -19,8 +19,8 @@ export let meta = () => {
 };
 
 export let loader = async ({ request }) => {
-  let userToken = await getUserToken(request);
-  if (!userToken) {
+  let user = await getUser(request);
+  if (!user) {
     return redirect('/account/login');
   }
 
@@ -57,10 +57,14 @@ export let action = async ({ request }) => {
   });
 
   if (!res.ok) {
-    if (res.status === 403 || res.status === 401) {
-      throw new Error('No token included');
-    }
-    throw new Error('Something Went Wrong');
+    console.log(res);
+
+    let resObj = await res.json();
+    throw new Error(
+      `${resObj.error.status} | ${resObj.error.name} | Message: ${
+        resObj.error.message
+      } | Details: ${JSON.stringify(resObj.error.details)}`
+    );
   }
 
   let evt = await res.json();
@@ -271,4 +275,10 @@ function validateForm(field, value) {
       }
     }
   }
+}
+
+export function ErrorBoundary({ error }) {
+  console.error(error);
+
+  return <div className="error-container">{`${error}`}</div>;
 }
