@@ -57,7 +57,7 @@ export let action = async ({ request }) => {
   });
 
   if (!res.ok) {
-    console.log(res);
+    console.error(res);
 
     let resObj = await res.json();
     throw new Error(

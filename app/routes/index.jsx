@@ -9,7 +9,7 @@ export let loader = async () => {
   );
 
   if (!res.ok) {
-    console.log(res);
+    console.error(res);
 
     let resObj = await res.json();
     throw new Error(

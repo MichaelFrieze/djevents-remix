@@ -58,7 +58,7 @@ export let action = async ({ request }) => {
   });
 
   if (!res.ok) {
-    console.log(res);
+    console.error(res);
 
     let resObj = await res.json();
     throw new Error(
@@ -77,7 +77,7 @@ export let loader = async ({ request, params: { id } }) => {
   let res = await fetch(`${process.env.API_URL}/api/events/${id}?populate=*`);
 
   if (!res.ok) {
-    console.log(res);
+    console.error(res);
 
     let resObj = await res.json();
     throw new Error(

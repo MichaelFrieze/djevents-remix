@@ -49,7 +49,7 @@ export let action = async ({ request }) => {
   );
 
   if (!eventRes.ok) {
-    console.log(eventRes);
+    console.error(eventRes);
 
     let eventResObj = await eventRes.json();
     throw new Error(
@@ -74,7 +74,7 @@ export let action = async ({ request }) => {
       }
     );
     if (!deletePrevImgRes.ok) {
-      console.log(deletePrevImgRes);
+      console.error(deletePrevImgRes);
 
       let deletePrevImgResObj = await deletePrevImgRes.json();
       throw new Error(
@@ -97,7 +97,7 @@ export let action = async ({ request }) => {
   });
 
   if (!uploadRes.ok) {
-    console.log(uploadRes);
+    console.error(uploadRes);
 
     let uploadResObj = await uploadRes.json();
     throw new Error(
