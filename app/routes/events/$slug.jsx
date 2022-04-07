@@ -41,14 +41,90 @@ export default function EventRoute() {
           {event.attributes.date} at {event.attributes.time}
         </span>
         <h1>{event.attributes.name}</h1>
-        {event.attributes.image.data?.attributes.formats.medium?.url && (
+        {event.attributes.image?.data?.attributes?.formats?.medium?.url && (
           <div className="image">
-            <img
-              alt="Event"
-              src={event.attributes.image.data.attributes.formats.medium.url}
-              width={960}
-              height={600}
-            />
+            <picture>
+              <source
+                media="(max-width: 300px)"
+                srcSet={
+                  event.attributes.image.data.attributes.formats.medium.url
+                }
+                width={200}
+                height={125}
+              />
+
+              <source
+                media="(max-width: 360px)"
+                srcSet={
+                  event.attributes.image.data.attributes.formats.medium.url
+                }
+                width={250}
+                height={156}
+              />
+
+              <source
+                media="(max-width: 460px)"
+                srcSet={
+                  event.attributes.image.data.attributes.formats.medium.url
+                }
+                width={300}
+                height={187}
+              />
+
+              <source
+                media="(max-width: 592px)"
+                srcSet={
+                  event.attributes.image.data.attributes.formats.medium.url
+                }
+                width={400}
+                height={250}
+              />
+
+              <source
+                media="(max-width: 670px)"
+                srcSet={
+                  event.attributes.image.data.attributes.formats.medium.url
+                }
+                width={500}
+                height={312}
+              />
+
+              <source
+                media="(max-width: 850px)"
+                srcSet={
+                  event.attributes.image.data.attributes.formats.medium.url
+                }
+                width={600}
+                height={375}
+              />
+
+              <source
+                media="(max-width: 1000px)"
+                srcSet={
+                  event.attributes.image.data.attributes.formats.medium.url
+                }
+                width={750}
+                height={468}
+              />
+
+              <source
+                media="(max-width: 1250px)"
+                srcSet={
+                  event.attributes.image.data.attributes.formats.medium.url
+                }
+                width={900}
+                height={562}
+              />
+
+              <img
+                alt="Event"
+                srcSet={
+                  event.attributes.image.data.attributes.formats.medium.url
+                }
+                width={960}
+                height={600}
+              />
+            </picture>
           </div>
         )}
 
