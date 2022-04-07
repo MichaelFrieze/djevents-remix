@@ -44,15 +44,27 @@ export let action = async ({ request }) => {
   uploadData.append('field', 'image');
 
   // get event
-  let eventResponse = await fetch(
+  let eventRes = await fetch(
     `${process.env.API_URL}/api/events/${eventID}?populate=image`
   );
-  let event = await eventResponse.json();
+
+  if (!eventRes.ok) {
+    console.log(eventRes);
+
+    let eventResObj = await eventRes.json();
+    throw new Error(
+      `${eventResObj.error.status} | ${eventResObj.error.name} | Message: ${
+        eventResObj.error.message
+      } | Details: ${JSON.stringify(eventResObj.error.details)}`
+    );
+  }
+
+  let eventResObj = await eventRes.json();
 
   // Delete previous image if exists
-  if (event.data.attributes.image.data?.id) {
-    let imageID = event.data.attributes.image.data.id;
-    let deletePrevImg = await fetch(
+  if (eventResObj.data.attributes.image?.data?.id) {
+    let imageID = eventResObj.data.attributes.image.data.id;
+    let deletePrevImgRes = await fetch(
       `${process.env.API_URL}/api/upload/files/${imageID}`,
       {
         method: 'DELETE',
@@ -61,12 +73,22 @@ export let action = async ({ request }) => {
         },
       }
     );
-    if (!deletePrevImg.ok) {
-      throw new Error('Something Went Wrong');
+    if (!deletePrevImgRes.ok) {
+      console.log(deletePrevImgRes);
+
+      let deletePrevImgResObj = await deletePrevImgRes.json();
+      throw new Error(
+        `${deletePrevImgResObj.error.status} | ${
+          deletePrevImgResObj.error.name
+        } | Message: ${
+          deletePrevImgResObj.error.message
+        } | Details: ${JSON.stringify(deletePrevImgResObj.error.details)}`
+      );
     }
   }
 
-  let uploadResponse = await fetch(`${process.env.API_URL}/api/upload`, {
+  // Upload new image
+  let uploadRes = await fetch(`${process.env.API_URL}/api/upload`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${userToken}`,
@@ -74,11 +96,18 @@ export let action = async ({ request }) => {
     body: uploadData,
   });
 
-  if (!uploadResponse.ok) {
-    throw new Error('Something Went Wrong');
+  if (!uploadRes.ok) {
+    console.log(uploadRes);
+
+    let uploadResObj = await uploadRes.json();
+    throw new Error(
+      `${uploadResObj.error.status} | ${uploadResObj.error.name} | Message: ${
+        uploadResObj.error.message
+      } | Details: ${JSON.stringify(uploadResObj.error.details)}`
+    );
   }
 
-  return redirect(`/events/${event.data.attributes.slug}`);
+  return redirect(`/events/${eventResObj.data.attributes.slug}`);
 };
 
 export let loader = async ({ params, request }) => {
