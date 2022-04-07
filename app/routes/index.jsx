@@ -7,9 +7,21 @@ export let loader = async () => {
   let res = await fetch(
     `${process.env.API_URL}/api/events?sort=date&pagination[limit]=3&populate=*`
   );
-  let events = await res.json();
 
-  return events.data;
+  if (!res.ok) {
+    console.log(res);
+
+    let resObj = await res.json();
+    throw new Error(
+      `${resObj.error.status} | ${resObj.error.name} | Message: ${
+        resObj.error.message
+      } | Details: ${JSON.stringify(resObj.error.details)}`
+    );
+  }
+
+  let resObj = await res.json();
+
+  return resObj.data;
 };
 
 export default function IndexRoute() {
@@ -31,4 +43,10 @@ export default function IndexRoute() {
       )}
     </>
   );
+}
+
+export function ErrorBoundary({ error }) {
+  console.error(error);
+
+  return <div className="error-container">{`${error}`}</div>;
 }
