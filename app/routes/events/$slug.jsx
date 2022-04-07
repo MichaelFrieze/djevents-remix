@@ -14,9 +14,21 @@ export let loader = async ({ params: { slug } }) => {
   let res = await fetch(
     `${process.env.API_URL}/api/events?filters[slug][$eq]=${slug}&populate=image`
   );
-  let event = await res.json();
 
-  return event.data[0];
+  if (!res.ok) {
+    console.log(res);
+
+    let resObj = await res.json();
+    throw new Error(
+      `${resObj.error.status} | ${resObj.error.name} | Message: ${
+        resObj.error.message
+      } | Details: ${JSON.stringify(resObj.error.details)}`
+    );
+  }
+
+  let resObj = await res.json();
+
+  return resObj.data[0];
 };
 
 export default function EventRoute() {
@@ -53,4 +65,10 @@ export default function EventRoute() {
       </div>
     </>
   );
+}
+
+export function ErrorBoundary({ error }) {
+  console.error(error);
+
+  return <div className="error-container">{`${error}`}</div>;
 }
