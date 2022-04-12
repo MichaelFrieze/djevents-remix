@@ -4,6 +4,8 @@ This is the DJ Events app from [Brad Traversy's Next.js course](https://www.udem
 
 I built this app to learn Remix and I really enjoyed the process. Remix is awesome!
 
+I used [Railway](https://railway.app/) to deploy this app and I prefer it over Heroku. It worked great for both Remix and Strapi.
+
 I also built the NextJS version of this app. You can find it [here](https://github.com/MichaelFrieze/dj-events-frontend) if you would like to compare NextJS and Remix.
 
 ## Development
