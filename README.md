@@ -1,6 +1,8 @@
 ## What is this app?
 
-This is the DJ Events app from [Brad Traversy's Next.js course](https://www.udemy.com/course/nextjs-dev-to-deployment/). Except I built this using [Remix](https://remix.run/) rather than NextJS. The backend is built using [Strapi v4](https://strapi.io/) and you can find the repo [here](https://github.com/MichaelFrieze/djevents-strapi).
+This is the DJ Events app from [Brad Traversy's Next.js course](https://www.udemy.com/course/nextjs-dev-to-deployment/). Except I built this using [Remix](https://remix.run/) rather than [NextJS](https://nextjs.org/). The backend is built using [Strapi v4](https://strapi.io/) and you can find the repo [here](https://github.com/MichaelFrieze/djevents-strapi).
+
+I built this app to learn Remix and I really enjoyed the process. Remix is awesome!
 
 I also built the NextJS version of this app. You can find it [here](https://github.com/MichaelFrieze/dj-events-frontend) if you would like to compare NextJS and Remix.
 
