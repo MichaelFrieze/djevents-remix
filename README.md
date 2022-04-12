@@ -6,7 +6,8 @@ The backend is built using [Strapi v4](https://strapi.io/). You can find the rep
 
 I used [Railway](https://railway.app/) to deploy this app and I prefer it over Heroku. It was easy to use and worked great for both Remix and Strapi.
 
-Sometimes the Srapi deployment on Railway has an error. The error is `Connection Error: Connection terminated unexpectedly`
+Sometimes the Srapi deployment on Railway has an error:
+`Connection Error: Connection terminated unexpectedly`
 
 It is rare but it does happen. If you see an error when using the Remix app then just refresh the page and it should be fine.
 
