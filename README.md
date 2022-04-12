@@ -4,9 +4,17 @@ This is the DJ Events app from [Brad Traversy's Next.js course](https://www.udem
 
 I built this app to learn Remix and I really enjoyed the process. Remix is awesome!
 
-I used [Railway](https://railway.app/) to deploy this app and I prefer it over Heroku. It worked great for both Remix and Strapi.
+I used [Railway](https://railway.app/) to deploy this app and I prefer it over Heroku. It was easy to use and worked great for both Remix and Strapi.
 
-I also built the NextJS version of this app. You can find it [here](https://github.com/MichaelFrieze/dj-events-frontend) if you would like to compare NextJS and Remix.
+Sometimes the Srapi deployment on Railway has an error. The error is `Connection Error: Connection terminated unexpectedly`
+
+It is rare but it does happen. If you see an error when using the Remix app then just refresh the page and it should be fine.
+
+On the bright side, getting an error when fetching from the Strapi backend gave me an oppertunity to learn how error handling works in Remix.
+
+I have not had any problems with the Remix deployment on Railway. It's just the Strapi deployment. I was considering putting the Strapi backend on Heroku but the free tier has slow initial load times. If the error occured more often then I would consider Heroku but right now Railway is much better IMO.
+
+I also built the NextJS version of this app. You can find it [here](https://github.com/MichaelFrieze/dj-events-frontend) if you would like to compare NextJS and Remix. It also uses a Strapi backend but it's v3 and deployed on Heroku rather than Railway.
 
 ## Development
 
